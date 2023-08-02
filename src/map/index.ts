@@ -31,10 +31,99 @@ const setKorDateTime = (timeStr: string | void) => {
     if(viewer) viewer.clock.currentTime = Cesium.JulianDate.fromDate(today);
 }
 
+const add3DTileset = async (url: string, index: number) => {
+    if(viewer) {
+        try {
+            const tileset = await Cesium.Cesium3DTileset.fromUrl(
+                url
+            );
+            tileset.style = new Cesium.Cesium3DTileStyle({
+                color: {
+                    conditions: [
+                        ["true", "color('lightgrey')"],
+                    ]
+                },
+            });
+            viewer.scene.primitives.add(tileset, index);
+        } catch (error) {
+            console.error(`Error creating tileset: ${error}`);
+        }
+    }
+}
+
+const toggle3DTileset = async (index: number, url: string) => {
+    if(viewer) {
+        const tilesetObj = viewer.scene.primitives.get(index);
+        if(tilesetObj) {
+            tilesetObj.show = !tilesetObj.show;
+        }else {
+            await add3DTileset(url, index);
+        }
+    }
+}
+
+const set3DTilesetStyle = async (index: number, transparency: number) => {
+    const tilesetObj = viewer?.scene.primitives.get(index);
+    if(tilesetObj) {
+        tilesetObj.style = new Cesium.Cesium3DTileStyle({
+            color: {
+                conditions: [
+                    ["true", `color('lightgrey', ${transparency})`],
+                ]
+            },
+        });
+    }
+}
+
+const zoomTo3DTileset = (index: number) => {
+    const tilesetObj = viewer?.scene.primitives.get(index);
+    if(tilesetObj) {
+        viewer?.zoomTo(tilesetObj);
+    }
+}
+// const findDataSourceByName = (name) => {
+//     let dataSource = viewer?.dataSources.getByName(name);
+//     debugger
+//     if ( dataSource || dataSource.length === 0) {
+//         dataSource.name = name;
+//         viewer.dataSources.add(dataSource);
+//     } else {
+//         dataSource = dataSource[0];
+//     }
+//     return dataSource;
+// }
+
+//
+const addGeoJsonData = (file, color) => {
+    console.log(file, color);
+    viewer?.dataSources.add(Cesium.GeoJsonDataSource.load(file, {
+        stroke: Cesium.Color.fromCssColorString(color).withAlpha(0.5),
+        fill: color,
+        strokeWidth: 4,
+        clampToGround: true,
+    }));
+}
+//
+// const toggleGeoJsonData = (name, dataList) => {
+//     const dataSource = findDataSourceByName(name);
+//     if(dataSource?.length === 0) {
+//       for(const data of dataList) {
+//           addGeoJsonData(name, data.file, data.color);
+//       }
+//     }else {
+//         dataSource.show = !dataSource.show;
+//     }
+// }
+
 export default {
     viewer,
     getViewer: (): Viewer | null => viewer,
     setCameraView,
+    add3DTileset,
+    toggle3DTileset,
+    set3DTilesetStyle,
+    zoomTo3DTileset,
+    addGeoJsonData,
     initMap: async (mapId: string) => {
         Cesium.Ion.defaultAccessToken = config.ACCESS_TOKEN;
 
@@ -50,16 +139,25 @@ export default {
             infoBox: false,
             selectionIndicator: false,
             navigationHelpButton: false, // toolbar,
-            // terrainProvider: new Cesium.CesiumTerrainProvider({
-            //     url: "https://175.197.92.213:10210/terrain-tile/dem05_ellipsoid"
-            // }),
             showRenderLoopErrors: false,
         });
 
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         viewer.bottomContainer.style.visibility = 'hidden';
 
         viewer.camera.percentageChanged = 0.01;
 
+        viewer.scene.globe.depthTestAgainstTerrain = true;
+        try {
+            const terrainProvider = await Cesium.CesiumTerrainProvider.fromUrl(
+                'http://192.168.10.3:8002/dem05_MSL', {
+                    requestVertexNormals: true
+                })
+            viewer.terrainProvider = terrainProvider;
+        } catch (error) {
+            console.log(error);
+        }
         setCameraView(config.DEFAULT_CAMERA_OPTION);
         setKorDateTime();
     },
