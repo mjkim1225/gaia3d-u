@@ -62,7 +62,12 @@ const LineCatalog = ({data}) => {
 
                 <Typography noWrap> {data.nameKor} </Typography>
 
-                <IconButton variant="plain" onClick={() => setSubMenu(!subMenu)}>
+                <IconButton variant="plain" onClick={() => setSubMenu(!subMenu)}
+                            sx={{
+                                position: 'absolute',
+                                right: "5%",
+                            }}
+                >
                     {subMenu ? <KeyboardArrowDownIcon/> : <KeyboardArrowLeftIcon/>}
                 </IconButton>
             </Stack>
@@ -88,7 +93,12 @@ const LineCatalog = ({data}) => {
 
                                     <Typography noWrap> 범례 </Typography>
 
-                                    <IconButton variant="plain" onClick={() => setSubLegend(!subLegend)} >
+                                    <IconButton variant="plain" onClick={() => setSubLegend(!subLegend)}
+                                                sx={{
+                                                    position: 'absolute',
+                                                    right: "5%",
+                                                }}
+                                    >
                                         {subLegend ? <KeyboardArrowDownIcon/> : <KeyboardArrowLeftIcon/>}
                                     </IconButton>
                                 </Stack>

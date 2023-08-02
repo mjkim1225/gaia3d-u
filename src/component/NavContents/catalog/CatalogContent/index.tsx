@@ -9,9 +9,9 @@ import Tileset3DCatalog from "../Tileset3D";
 import LineCatalog from "../Line";
 
 const Item = styled(Paper)(({theme}) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    backgroundColor: '#F5F5F5',
     ...theme.typography.body2,
-    padding: theme.spacing(1),
+    padding: "1px",
     textAlign: 'center',
     color: theme.palette.text.secondary,
     maxWidth: 400,
@@ -21,7 +21,7 @@ const CatalogContent = ({ dataList }) => {
     return (
         <>
             {dataList.map((data) => (
-                <Box key={dataList.indexOf(data)} sx={{ flexGrow: 1, overflow: 'hidden', px: 3 }}>
+                <Box key={dataList.indexOf(data)} sx={{ flexGrow: 1, overflow: 'hidden', px: 1 }}>
                     <Item sx={{ my: 1, mx: 'auto', p: 1 }}>
                         {data.type === '3DTileset' ? (
                             <Tileset3DCatalog data={data} />

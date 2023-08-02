@@ -18,7 +18,7 @@ const Catalog = () => {
 
     return (
         <>
-        <Stack alignItems="center" spacing={3} sx={{pt: 5, borderRadius: 2, position: 'relative'}}>
+        <Stack alignItems="center" spacing={3} sx={{pt: 5, borderRadius: 2, position: 'relative', padding: 0}}>
             <Button variant="contained"
                     startIcon={<AddCircleOutlineIcon />}
                     onClick={() => setOpenSearch(true)}

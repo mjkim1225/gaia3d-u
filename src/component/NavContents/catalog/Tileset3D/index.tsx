@@ -54,7 +54,7 @@ const Tileset3DCatalog = ({data}) => {
 
     return (
         <>
-            <Stack direction="row" alignItems="center" sx={{p: 1}}>
+            <Stack direction="row" alignItems="center" sx={{p: 1, }}>
                 <IconButton variant="plain">
                     <DragIndicatorIcon/>
                 </IconButton>
@@ -64,7 +64,12 @@ const Tileset3DCatalog = ({data}) => {
 
                 <Typography noWrap> {data.nameKor} </Typography>
 
-                <IconButton variant="plain" onClick={() => setSubMenu(!subMenu)}>
+                <IconButton variant="plain" onClick={() => setSubMenu(!subMenu)}
+                            sx={{
+                                position: 'absolute',
+                                right: "5%",
+                            }}
+                >
                     {subMenu ? <KeyboardArrowDownIcon/> : <KeyboardArrowLeftIcon/>}
                 </IconButton>
             </Stack>
