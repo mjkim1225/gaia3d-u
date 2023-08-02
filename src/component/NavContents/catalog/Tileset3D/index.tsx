@@ -30,7 +30,10 @@ const Tileset3DCatalog = ({data}) => {
     useEffect(() => {
         map.add3DTilesetAndGetIndex(data.url).then(
             (index) => {
-                if(index) setDataIndex(index);
+                if( index !== undefined) {
+                    setDataIndex(index);
+                    map.zoomTo3DTileset(index);
+                }
             }
         );
     }, []);
@@ -44,7 +47,6 @@ const Tileset3DCatalog = ({data}) => {
         setTransparency(value)
         await map.set3DTilesetStyle(dataIndex, value)
     };
-
 
     const zoom = () => {
         map.zoomTo3DTileset(dataIndex);

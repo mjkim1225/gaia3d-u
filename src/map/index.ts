@@ -10,7 +10,7 @@ type Viewer = Cesium.Viewer;
 let viewer: Viewer | null = null;
 
 const setCameraView = (params: CameraOption) => {
-    viewer?.camera.flyTo({
+    viewer?.camera.setView({
         destination: Cesium.Cartesian3.fromDegrees(
             params.longitude,
             params.latitude,
@@ -80,6 +80,7 @@ const set3DTilesetStyle = async (index: number, transparency: number) => {
 
 const zoomTo3DTileset = (index: number) => {
     const tilesetObj = viewer?.scene.primitives.get(index);
+
     if(tilesetObj) {
         viewer?.zoomTo(tilesetObj);
     }
