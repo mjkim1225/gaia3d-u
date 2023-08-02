@@ -4,10 +4,6 @@ import { styled } from '@mui/material/styles';
 
 import Nav from './component/Nav';
 import Map from "./component/Map";
-import Header from "./component/Header";
-
-const APP_BAR_MOBILE = 64;
-const APP_BAR_DESKTOP = 92;
 
 const StyledRoot = styled('div')({
     display: 'flex',

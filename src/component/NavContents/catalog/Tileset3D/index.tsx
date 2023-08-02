@@ -17,7 +17,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import PropTypes from "prop-types";
 
 import map from '../../../../map';
-import {useCallback, useEffect, useMemo} from "react";
+import { useEffect } from "react";
 
 
 const Tileset3DCatalog = ({data}) => {
