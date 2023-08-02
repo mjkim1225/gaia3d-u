@@ -31,12 +31,17 @@ const setKorDateTime = (timeStr: string | void) => {
     if(viewer) viewer.clock.currentTime = Cesium.JulianDate.fromDate(today);
 }
 
-const add3DTileset = async (url: string, index: number) => {
+const add3DTilesetAndGetIndex = async (url: string): Promise< number | undefined> => {
     if(viewer) {
+        const index = viewer.scene.primitives.length;
         try {
             const tileset = await Cesium.Cesium3DTileset.fromUrl(
                 url
             );
+            tileset.customShader = new Cesium.CustomShader({
+                lightingModel: Cesium.LightingModel.UNLIT
+            })
+
             tileset.style = new Cesium.Cesium3DTileStyle({
                 color: {
                     conditions: [
@@ -45,25 +50,23 @@ const add3DTileset = async (url: string, index: number) => {
                 },
             });
             viewer.scene.primitives.add(tileset, index);
+            return index;
         } catch (error) {
             console.error(`Error creating tileset: ${error}`);
         }
     }
 }
 
-const toggle3DTileset = async (index: number, url: string) => {
+const toggle3DTileset = async (index: number) => {
     if(viewer) {
         const tilesetObj = viewer.scene.primitives.get(index);
-        if(tilesetObj) {
-            tilesetObj.show = !tilesetObj.show;
-        }else {
-            await add3DTileset(url, index);
-        }
+        tilesetObj.show = !tilesetObj.show;
     }
 }
 
 const set3DTilesetStyle = async (index: number, transparency: number) => {
     const tilesetObj = viewer?.scene.primitives.get(index);
+    console.log(index, transparency)
     if(tilesetObj) {
         tilesetObj.style = new Cesium.Cesium3DTileStyle({
             color: {
@@ -95,7 +98,6 @@ const zoomTo3DTileset = (index: number) => {
 
 //
 const addGeoJsonData = (file, color) => {
-    console.log(file, color);
     viewer?.dataSources.add(Cesium.GeoJsonDataSource.load(file, {
         stroke: Cesium.Color.fromCssColorString(color).withAlpha(0.5),
         fill: color,
@@ -119,7 +121,7 @@ export default {
     viewer,
     getViewer: (): Viewer | null => viewer,
     setCameraView,
-    add3DTileset,
+    add3DTilesetAndGetIndex,
     toggle3DTileset,
     set3DTilesetStyle,
     zoomTo3DTileset,

@@ -17,32 +17,37 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import PropTypes from "prop-types";
 
 import map from '../../../../map';
-import { useEffect } from "react";
+import {useCallback, useEffect, useMemo} from "react";
 
 
 const Tileset3DCatalog = ({data}) => {
 
     const [subMenu, setSubMenu] = React.useState(false);
-
     const [show, setShow] = React.useState(true);
-
-    const [transparency, setTransparency] = React.useState(100);
+    const [transparency, setTransparency] = React.useState(1);
+    const [dataIndex, setDataIndex] = React.useState(0);
 
     useEffect(() => {
-        map.add3DTileset(data.url, data.id);
+        map.add3DTilesetAndGetIndex(data.url).then(
+            (index) => {
+                if(index) setDataIndex(index);
+            }
+        );
     }, []);
-
-    useEffect(() => {
-        map.set3DTilesetStyle(data.id, transparency)
-    }, [transparency]);
 
     const showData = async () => {
         setShow(!show);
-        await map.toggle3DTileset(data.id, data.url);
+        await map.toggle3DTileset(dataIndex);
     }
 
+    const changeTransparency = async (value) => {
+        setTransparency(value)
+        await map.set3DTilesetStyle(dataIndex, value)
+    };
+
+
     const zoom = () => {
-        map.zoomTo3DTileset(data.id);
+        map.zoomTo3DTileset(dataIndex);
     }
 
     return (
@@ -95,7 +100,7 @@ const Tileset3DCatalog = ({data}) => {
                                 <Slider aria-label="Volume" step={0.1} marks min={0} max={1}
                                         value={transparency}
                                         onChange={(event: Event, newValue: number | number[]) => {
-                                            setTransparency(newValue as number);
+                                            changeTransparency(newValue as number);
                                         }}
                                 />
                             </div>

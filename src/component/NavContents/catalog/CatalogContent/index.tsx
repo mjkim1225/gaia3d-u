@@ -21,7 +21,7 @@ const CatalogContent = ({ dataList }) => {
     return (
         <>
             {dataList.map((data) => (
-                <Box key={data.id} sx={{ flexGrow: 1, overflow: 'hidden', px: 3 }}>
+                <Box key={dataList.indexOf(data)} sx={{ flexGrow: 1, overflow: 'hidden', px: 3 }}>
                     <Item sx={{ my: 1, mx: 'auto', p: 1 }}>
                         {data.type === '3DTileset' ? (
                             <Tileset3DCatalog data={data} />
