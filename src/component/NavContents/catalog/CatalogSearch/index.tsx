@@ -13,6 +13,8 @@ import AddIcon from '@mui/icons-material/Add';
 import buildings from '../../../../data/buildings';
 import railways from "../../../../data/railways";
 
+const wholeDataList = [...buildings, ...railways]; //TODO 나중에 모든 데이터를 가져오는 모듈을 만들어서 따로 빼자
+
 const CatalogSearch = ({open, close, addNewData}) => {
 
     const addData = (data) => {
@@ -37,23 +39,11 @@ const CatalogSearch = ({open, close, addNewData}) => {
                 <DialogContent>
                     <List>
                         {
-                            buildings.map((building, index) => (
+                            wholeDataList.map((data, index) => (
                                 <ListItem key={index}>
-                                    <ListItemText primary={building.nameKor}/>
+                                    <ListItemText primary={data.nameKor}/>
                                     <ListItemSecondaryAction>
-                                        <IconButton edge="end" aria-label="add" onClick={()=>addData(building)}>
-                                            <AddIcon/>
-                                        </IconButton>
-                                    </ListItemSecondaryAction>
-                                </ListItem>
-                            ))
-                        }
-                        {
-                            railways.map((railway, index) => (
-                                <ListItem key={index}>
-                                    <ListItemText primary={railway.nameKor}/>
-                                    <ListItemSecondaryAction>
-                                        <IconButton edge="end" aria-label="add" onClick={()=>addData(railway)}>
+                                        <IconButton edge="end" aria-label="add" onClick={()=>addData(data)}>
                                             <AddIcon/>
                                         </IconButton>
                                     </ListItemSecondaryAction>

@@ -1,3 +1,24 @@
+/**
+ * @description
+ * 서울 su
+ * 제주 jj
+ * 세종 sj
+ * 부산 bs
+ * 경기 gg
+ * 인천 ic
+ * 경남 gn
+ * 울산 us
+ * 경북 gb
+ * 대구 dg
+ * 충북 cb
+ * 충남 cn
+ * 대전 dj
+ * 전북 jb
+ * 전남 jn
+ * 광주 gj
+ * 강원 gw
+ */
+
 
 const buildings = [
     {
@@ -40,7 +61,36 @@ const buildings = [
         cityEng: "bs",
         url: "http://192.168.10.3:8002/static/tile/tileset_all/bs_tileset/tileset.json"
     },
-
+    {
+        id: 4,
+        type: "3DTileset",
+        nameKor: "경기도 3D 빌딩",
+        nameEng: "gyeonggi 3d buildings",
+        cityKor: "경기도",
+        cityEng: "gg",
+        tileset: "gg_tileset",
+        url: "http://192.168.10.3:8002/static/tile/tileset_all/gg_tileset/tileset.json"
+    },
+    {
+        id: 5,
+        type: "3DTileset",
+        nameKor: "인천시 3D 빌딩",
+        nameEng: "incheon 3d buildings",
+        cityKor: "인천시",
+        cityEng: "ic",
+        tileset: "ic_tileset",
+        url: "http://192.168.10.3:8002/static/tile/tileset_all/ic_tileset/tileset.json"
+    },
+    {
+        id: 6,
+        type: "3DTileset",
+        nameKor: "경상남도 3D 빌딩",
+        nameEng: "gyeongnam 3d buildings",
+        cityKor: "경상남도",
+        cityEng: "gn",
+        tileset: "gn_tileset",
+        url: "http://192.168.10.3:8002/static/tile/tileset_all/gn_tileset/tileset.json"
+    }
 ]
 
 
