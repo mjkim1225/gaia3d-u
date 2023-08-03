@@ -18,6 +18,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import {styled} from "@mui/material/styles";
 import PropTypes from "prop-types";
 import map from "../../../../map";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
 const LineCatalog = ({data}) => {
 
@@ -30,7 +31,7 @@ const LineCatalog = ({data}) => {
     useEffect(() => {
         const loadData = async () => {
             data.dataList.map(async (d) => {
-                await map.addGeoJsonData(d.url, d.color);
+                await map.addGeoJsonData(d.nameEng, d.url, d.color);
             });
             setShow(true);
         };
@@ -40,7 +41,9 @@ const LineCatalog = ({data}) => {
 
     const showData = async () => {
         setShow(!show);
-        // map.toggleGeoJsonData(nameEng, dataList);
+        data.dataList.map(async (d) => {
+            map.toggleGeoJsonData(d.nameEng);
+        });
     }
 
     const LegendColor = styled('div')(({color}) => ({
@@ -73,19 +76,21 @@ const LineCatalog = ({data}) => {
             </Stack>
             {
                 subMenu ?
-                    <Stack direction="row" alignItems="center" sx={{p: 1}}>
-                        <Box sx={{'& button': {m: 1}}}>
+                    <Stack direction="column" spacing={1} >
+                        <Box sx={{ '& button': { m: 1 } }}>
                             <div>
-                                <Button size="small" variant="outlined">카메라</Button>
-                                <Button size="small" variant="outlined" disabled>
+                                <Button size="small" variant="contained" sx={{ width: '30%' }}>
+                                    카메라
+                                </Button>
+                                <Button size="small" variant="outlined" disabled sx={{ width: '30%' }}>
                                     데아터정보
                                 </Button>
-                                <Button size="small" variant="outlined" href="#outlined-buttons">
-                                    X
+                                <Button size="small" variant="contained" href="#outlined-buttons" sx={{ width: '10%' }}>
+                                    <DeleteForeverIcon />
                                 </Button>
                             </div>
                             <div>
-                                <Button variant="outlined" size="small">
+                                <Button variant="outlined" size="small" sx={{ width: '90%' }}>
                                     오픈데이터 얻기
                                 </Button>
                             </div>

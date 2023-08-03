@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import {SelectChangeEvent, Stack} from "@mui/material";
+import { SelectChangeEvent, Stack } from "@mui/material";
 
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/joy/IconButton';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Slider from '@mui/material/Slider';
+import Switch from '@mui/joy/Switch';
 
 //icon
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
@@ -32,8 +33,7 @@ const SHADOW_MODE_OPTIONS: { label: string; value: ShadowModeType }[] = [
     { label: 'Receive Only', value: 'RECEIVE_ONLY' },
 ];
 
-const Tileset3DCatalog = ({data, removeData}) => {
-
+const Tileset3DCatalog = ({ data, removeData }) => {
     const [subMenu, setSubMenu] = useState(false);
     const [show, setShow] = useState(true);
     const [dataIndex, setDataIndex] = useState(0);
@@ -41,7 +41,7 @@ const Tileset3DCatalog = ({data, removeData}) => {
     useEffect(() => {
         map.add3DTilesetAndGetIndex(data.url).then(
             (index) => {
-                if( index !== undefined) {
+                if (index !== undefined) {
                     setDataIndex(index);
                     map.zoomTo3DTileset(index);
                 }
@@ -60,16 +60,16 @@ const Tileset3DCatalog = ({data, removeData}) => {
         map.set3DTilesetShadowMode(dataIndex, mode);
     };
 
-    const showData = async () => {
+    const showData = () => {
         setShow(!show);
-        await map.toggle3DTileset(dataIndex);
+        map.toggle3DTileset(dataIndex);
     }
 
     const [transparency, setTransparency] = useState(1);
 
-    const changeTransparency = async (value) => {
+    const changeTransparency = (value) => {
         setTransparency(value)
-        await map.set3DTilesetTransparency(dataIndex, value)
+        map.set3DTilesetTransparency(dataIndex, value)
     };
 
     const remove3DTileset = () => {
@@ -77,9 +77,15 @@ const Tileset3DCatalog = ({data, removeData}) => {
         removeData(data);
     }
 
+    const [clipping, setClipping] = React.useState<boolean>(false);
+
+    useEffect(() => {
+        if(clipping) map.createClippingPlane(dataIndex);
+    }, [clipping]);
+
     return (
         <>
-            <Stack direction="row" alignItems="center" sx={{p: 1, }}>
+            <Stack direction="row" alignItems="center" sx={{p: 1}}>
                 <IconButton variant="plain">
                     <DragIndicatorIcon/>
                 </IconButton>
@@ -98,73 +104,74 @@ const Tileset3DCatalog = ({data, removeData}) => {
                     {subMenu ? <KeyboardArrowDownIcon/> : <KeyboardArrowLeftIcon/>}
                 </IconButton>
             </Stack>
-            {
-                subMenu ?
-                    <Stack direction="row" alignItems="center" sx={{p: 1}}>
-                        <Box sx={{'& button': {m: 1}}}>
-                            <div>
-                                <Button size="small" variant="outlined"
-                                        onClick={zoom}>
-                                    카메라
-                                </Button>
-                                <Button size="small" variant="outlined" disabled>
-                                    데아터정보
-                                </Button>
-                                <Button size="small" variant="outlined" href="#outlined-buttons" onClick={remove3DTileset}>
-                                    <DeleteForeverIcon />
-                                </Button>
-                            </div>
-                            <div>
-                                <Button variant="outlined" size="small">
-                                    데이터 검색
-                                </Button>
-                            </div>
-                            <div>
-                                <Button variant="outlined" size="small">
-                                    오픈데이터 얻기
-                                </Button>
-                            </div>
-                            <div>
-                                필터(건축물)
-                            </div>
-                            <div>
-                                투명도
-                                <Slider aria-label="Volume" step={0.1} marks min={0} max={1}
-                                        value={transparency}
-                                        onChange={(event: Event, newValue: number | number[]) => {
-                                            changeTransparency(newValue as number);
-                                        }}
-                                />
-                            </div>
-                            <div>
-                                그림자
-                                <FormControl variant="outlined" fullWidth>
-                                    <InputLabel id="shadow-mode-label">Shadow Mode</InputLabel>
-                                    <Select
-                                        labelId="shadow-mode-label"
-                                        id="shadow-mode-select"
-                                        value={selectedMode}
-                                        onChange={handleModeChange}
-                                        label="Shadow Mode"
-                                    >
-                                        {SHADOW_MODE_OPTIONS.map((option) => (
-                                            <MenuItem key={option.value} value={option.value}>
-                                                {option.label}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-                            </div>
-                            <div>
-                                클리핑
-                            </div>
-                            <div>
-                                색으로 구분 (건축물)
-                            </div>
-                        </Box>
-                    </Stack>
-                    : null
-            }
+            {subMenu ? (
+                <Stack direction="column" spacing={1} >
+                    <Box sx={{ '& button': { m: 1 } }}>
+                        <div>
+                            <Button size="small" variant="contained" onClick={zoom} sx={{ width: '30%' }}>
+                                카메라
+                            </Button>
+                            <Button size="small" variant="outlined" disabled sx={{ width: '30%' }}>
+                                데아터정보
+                            </Button>
+                            <Button size="small" variant="contained" href="#outlined-buttons" onClick={remove3DTileset} sx={{ width: '10%' }}>
+                                <DeleteForeverIcon />
+                            </Button>
+                        </div>
+                        <div>
+                            <Button variant="outlined" size="small" sx={{ width: '90%' }}>
+                                데이터 검색
+                            </Button>
+                        </div>
+                        <div>
+                            <Button variant="outlined" size="small" sx={{ width: '90%' }}>
+                                오픈데이터 얻기
+                            </Button>
+                        </div>
+                        <div>
+                            필터(건축물)
+                        </div>
+                        <div>
+                            투명도
+                            <Slider aria-label="Volume" step={0.1} marks min={0} max={1}
+                                    value={transparency}
+                                    onChange={(event: Event, newValue: number | number[]) => {
+                                        changeTransparency(newValue as number);
+                                    }}
+                            />
+                        </div>
+                        <div>
+                            그림자
+                            <FormControl variant="outlined" fullWidth>
+                                <InputLabel id="shadow-mode-label">Shadow Mode</InputLabel>
+                                <Select
+                                    labelId="shadow-mode-label"
+                                    id="shadow-mode-select"
+                                    value={selectedMode}
+                                    onChange={handleModeChange}
+                                    label="Shadow Mode"
+                                >
+                                    {SHADOW_MODE_OPTIONS.map((option) => (
+                                        <MenuItem key={option.value} value={option.value}>
+                                            {option.label}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </div>
+                        <div>
+                            클리핑
+                            <Switch
+                                checked={clipping}
+                                onChange={(event) => setClipping(event.target.checked)}
+                            />
+                        </div>
+                        <div>
+                            색으로 구분 (건축물)
+                        </div>
+                    </Box>
+                </Stack>
+            ) : null}
         </>
     );
 }

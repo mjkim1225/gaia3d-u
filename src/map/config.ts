@@ -23,8 +23,15 @@ const SHADOW_MODE = {
     RECEIVE_ONLY: Cesium.ShadowMode.RECEIVE_ONLY,
 }
 
+const CLIPPING_OPTIONS = {
+    BOX_SIZE: 50,
+    naming: (tilesetIndex, direction) => `${tilesetIndex}-${direction}`,
+    parsingDirection: (name) => name.split('-')[1],
+}
+
 export default {
     ACCESS_TOKEN,
     DEFAULT_CAMERA_OPTION,
-    SHADOW_MODE
+    SHADOW_MODE,
+    CLIPPING_OPTIONS
 };

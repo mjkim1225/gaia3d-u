@@ -49,6 +49,7 @@ const add3DTilesetAndGetIndex = async (url: string): Promise< number | undefined
                     ]
                 },
             });
+
             viewer.scene.primitives.add(tileset, index);
             return index;
         } catch (error) {
@@ -64,14 +65,14 @@ const remove3DTileset = (index: number) => {
     }
 }
 
-const toggle3DTileset = async (index: number) => {
+const toggle3DTileset = (index: number) => {
     if(viewer) {
         const tilesetObj = viewer.scene.primitives.get(index);
         tilesetObj.show = !tilesetObj.show;
     }
 }
 
-const set3DTilesetTransparency = async (index: number, transparency: number) => {
+const set3DTilesetTransparency = (index: number, transparency: number) => {
     const tilesetObj = viewer?.scene.primitives.get(index);
     if(tilesetObj) {
         tilesetObj.style = new Cesium.Cesium3DTileStyle({
@@ -99,14 +100,112 @@ const zoomTo3DTileset = (index: number) => {
     }
 }
 
-const addGeoJsonData = (file, color) => {
-    viewer?.dataSources.add(Cesium.GeoJsonDataSource.load(file, {
+const addGeoJsonData = (name, file, color) => {
+    Cesium.GeoJsonDataSource.load(file, {
         stroke: Cesium.Color.fromCssColorString(color).withAlpha(0.5),
         fill: color,
         strokeWidth: 4,
         clampToGround: true,
-    }));
+    }).then((dataSource) => {
+        dataSource.name = name;
+        viewer?.dataSources.add(dataSource);
+    });
 }
+
+const toggleGeoJsonData = (name) => {
+    if(viewer) {
+        const dataSource = viewer?.dataSources.getByName(name)[0];
+        if(dataSource) {
+            dataSource.show = !dataSource.show;
+        }
+    }
+}
+
+const createPlaneUpdateFunction
+    = (plane) => () => {
+        plane.distance = config.CLIPPING_OPTIONS.BOX_SIZE / 2;
+        return plane;
+    }
+
+
+const createClippingPlane = (index) => {
+    if (viewer) {
+        const tilesetObj = viewer.scene.primitives.get(index);
+
+        if (tilesetObj instanceof Cesium.Cesium3DTileset) {
+            // 1. Create clipping planes for the cube (6 faces)
+            const clippingPlanes = new Cesium.ClippingPlaneCollection();
+            const faces = [
+                {
+                    direction: "Right",
+                    value: new Cesium.Cartesian3(1.0, 0.0, 0.0),
+                },
+                {
+                    direction: "Left",
+                    value: new Cesium.Cartesian3(-1.0, 0.0, 0.0),
+                },
+                {
+                    direction: "Top",
+                    value: new Cesium.Cartesian3(0.0, 1.0, 0.0),
+                },
+                {
+                    direction: "Bottom",
+                    value: new Cesium.Cartesian3(0.0, -1.0, 0.0),
+                },
+                {
+                    direction: "Front",
+                    value: new Cesium.Cartesian3(0.0, 0.0, 1.0),
+                },
+                {
+                    direction: "Back",
+                    value: new Cesium.Cartesian3(0.0, 0.0, -1.0),
+                }
+            ]
+
+            for (let i = 0; i < faces.length; i++) {
+                const cartesian = faces[i].value;
+                const plane = new Cesium.ClippingPlane( cartesian, 0.0 );
+                clippingPlanes.add(plane);
+            }
+
+            // 2. Apply the clipping planes to the tileset
+            tilesetObj.clippingPlanes = clippingPlanes;
+
+            // 3. Calculate the bounding sphere center of the tileset
+            const boundingSphere = tilesetObj.boundingSphere;
+            const center = boundingSphere.center;
+
+            const camera = viewer.scene.camera;
+
+            const size = config.CLIPPING_OPTIONS.BOX_SIZE;
+            for (let i = 0; i < faces.length; i++) {
+                const planeEntity = viewer.entities.add({
+                    id: config.CLIPPING_OPTIONS.naming(index, faces[i].direction),
+                    position: center,
+                    plane: {
+                        dimensions: new Cesium.Cartesian2(size,size),
+                        material: Cesium.Color.WHITE.withAlpha(0.1),
+                        plane: new Cesium.CallbackProperty(
+                            createPlaneUpdateFunction(clippingPlanes.get(i)),
+                            false
+                        ),
+                        outline: true,
+                        outlineColor: Cesium.Color.WHITE,
+                    },
+                });
+
+                // planeEntities.push(planeEntity);
+            }
+
+            // 8. Enable clipping plane
+            tilesetObj.clippingPlanes.enabled = true;
+
+            // 9. Set the color of the clipping planes
+            tilesetObj.clippingPlanes.edgeColor = Cesium.Color.WHITE;
+        }
+    }
+};
+
 
 
 export default {
@@ -120,6 +219,8 @@ export default {
     set3DTilesetShadowMode,
     zoomTo3DTileset,
     addGeoJsonData,
+    toggleGeoJsonData,
+    createClippingPlane,
     initMap: async (mapId: string) => {
         Cesium.Ion.defaultAccessToken = config.ACCESS_TOKEN;
 
