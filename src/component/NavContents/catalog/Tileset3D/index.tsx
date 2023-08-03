@@ -152,6 +152,9 @@ const Tileset3DCatalog = ({data}) => {
                             <div>
                                 클리핑
                             </div>
+                            <div>
+                                색으로 구분 (건축물)
+                            </div>
                         </Box>
                     </Stack>
                     : null

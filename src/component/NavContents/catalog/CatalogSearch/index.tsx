@@ -11,40 +11,41 @@ import ListItemText from '@mui/material/ListItemText';
 import AddIcon from '@mui/icons-material/Add';
 
 import buildings from '../../../../data/buildings';
-import railways from "../../../../data/railways";
+import railways from '../../../../data/railways';
 
 const wholeDataList = [...buildings, ...railways]; //TODO 나중에 모든 데이터를 가져오는 모듈을 만들어서 따로 빼자
 
-const CatalogSearch = ({open, close, addNewData}) => {
-
+const CatalogSearch = ({ open, close, addNewData }) => {
     const addData = (data) => {
         addNewData(data);
         close();
-    }
+    };
 
     return (
         <div>
-            <Dialog open={open}
-                    onClose={close}
-                    maxWidth="sm"
-                    fullWidth
-                    BackdropProps={{invisible: true}}
+            <Dialog
+                open={open}
+                onClose={close}
+                maxWidth="sm"
+                fullWidth
+                sx={{ "& .MuiDialog-paper": { width: 500 }, "& .MuiDialogContent-root": { maxHeight: 500 } }} // 스타일 설정
+                BackdropProps={{ invisible: true }}
             >
                 <DialogTitle>
                     Search Catalog
                     <IconButton edge="end" color="inherit" onClick={close} aria-label="close">
-                        <CloseIcon/>
+                        <CloseIcon />
                     </IconButton>
                 </DialogTitle>
-                <DialogContent>
-                    <List>
+                <DialogContent dividers>
+                    <List style={{ maxHeight: 300, overflow: 'auto' }}>
                         {
                             wholeDataList.map((data, index) => (
                                 <ListItem key={index}>
-                                    <ListItemText primary={data.nameKor}/>
+                                    <ListItemText primary={data.nameKor} />
                                     <ListItemSecondaryAction>
-                                        <IconButton edge="end" aria-label="add" onClick={()=>addData(data)}>
-                                            <AddIcon/>
+                                        <IconButton edge="end" aria-label="add" onClick={() => addData(data)}>
+                                            <AddIcon />
                                         </IconButton>
                                     </ListItemSecondaryAction>
                                 </ListItem>
