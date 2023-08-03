@@ -31,7 +31,7 @@ const CatalogSearch = ({ open, close, addNewData }) => {
                 sx={{ "& .MuiDialog-paper": { width: 500 }, "& .MuiDialogContent-root": { maxHeight: 500 } }} // 스타일 설정
                 BackdropProps={{ invisible: true }}
             >
-                <DialogTitle>
+                <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}> {/* 수정 */}
                     Search Catalog
                     <IconButton edge="end" color="inherit" onClick={close} aria-label="close">
                         <CloseIcon />
