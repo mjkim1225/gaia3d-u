@@ -1,5 +1,5 @@
-import * as React from 'react';
-import {Stack} from "@mui/material";
+import React, { useEffect, useState } from 'react';
+import {SelectChangeEvent, Stack} from "@mui/material";
 
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/joy/IconButton';
@@ -17,15 +17,25 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import PropTypes from "prop-types";
 
 import map from '../../../../map';
-import { useEffect } from "react";
+import mapConfig from '../../../../map/config';
 
+import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+
+const shadowMode = mapConfig.SHADOW_MODE;
+type ShadowModeType = keyof typeof shadowMode;
+
+const SHADOW_MODE_OPTIONS: { label: string; value: ShadowModeType }[] = [
+    { label: 'Disabled', value: 'DISABLED' },
+    { label: 'Enabled', value: 'ENABLED' },
+    { label: 'Cast Only', value: 'CAST_ONLY' },
+    { label: 'Receive Only', value: 'RECEIVE_ONLY' },
+];
 
 const Tileset3DCatalog = ({data}) => {
 
-    const [subMenu, setSubMenu] = React.useState(false);
-    const [show, setShow] = React.useState(true);
-    const [transparency, setTransparency] = React.useState(1);
-    const [dataIndex, setDataIndex] = React.useState(0);
+    const [subMenu, setSubMenu] = useState(false);
+    const [show, setShow] = useState(true);
+    const [dataIndex, setDataIndex] = useState(0);
 
     useEffect(() => {
         map.add3DTilesetAndGetIndex(data.url).then(
@@ -38,19 +48,28 @@ const Tileset3DCatalog = ({data}) => {
         );
     }, []);
 
+    const zoom = () => {
+        map.zoomTo3DTileset(dataIndex);
+    }
+
+    const [selectedMode, setSelectedMode] = useState<ShadowModeType>('ENABLED');
+    const handleModeChange = (event: SelectChangeEvent<ShadowModeType>) => {
+        const mode = event.target.value as ShadowModeType;
+        setSelectedMode(mode);
+        map.set3DTilesetShadowMode(dataIndex, mode);
+    };
+
     const showData = async () => {
         setShow(!show);
         await map.toggle3DTileset(dataIndex);
     }
 
+    const [transparency, setTransparency] = useState(1);
+
     const changeTransparency = async (value) => {
         setTransparency(value)
-        await map.set3DTilesetStyle(dataIndex, value)
+        await map.set3DTilesetTransparency(dataIndex, value)
     };
-
-    const zoom = () => {
-        map.zoomTo3DTileset(dataIndex);
-    }
 
     return (
         <>
@@ -113,6 +132,22 @@ const Tileset3DCatalog = ({data}) => {
                             </div>
                             <div>
                                 그림자
+                                <FormControl variant="outlined" fullWidth>
+                                    <InputLabel id="shadow-mode-label">Shadow Mode</InputLabel>
+                                    <Select
+                                        labelId="shadow-mode-label"
+                                        id="shadow-mode-select"
+                                        value={selectedMode}
+                                        onChange={handleModeChange}
+                                        label="Shadow Mode"
+                                    >
+                                        {SHADOW_MODE_OPTIONS.map((option) => (
+                                            <MenuItem key={option.value} value={option.value}>
+                                                {option.label}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
                             </div>
                             <div>
                                 클리핑

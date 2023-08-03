@@ -64,9 +64,8 @@ const toggle3DTileset = async (index: number) => {
     }
 }
 
-const set3DTilesetStyle = async (index: number, transparency: number) => {
+const set3DTilesetTransparency = async (index: number, transparency: number) => {
     const tilesetObj = viewer?.scene.primitives.get(index);
-    console.log(index, transparency)
     if(tilesetObj) {
         tilesetObj.style = new Cesium.Cesium3DTileStyle({
             color: {
@@ -78,6 +77,13 @@ const set3DTilesetStyle = async (index: number, transparency: number) => {
     }
 }
 
+const set3DTilesetShadowMode = (index: number, mode: keyof typeof config.SHADOW_MODE) => {
+    const tilesetObj = viewer?.scene.primitives.get(index);
+    if(tilesetObj) {
+        tilesetObj.shadows = config.SHADOW_MODE[mode];
+    }
+}
+
 const zoomTo3DTileset = (index: number) => {
     const tilesetObj = viewer?.scene.primitives.get(index);
 
@@ -85,19 +91,7 @@ const zoomTo3DTileset = (index: number) => {
         viewer?.zoomTo(tilesetObj);
     }
 }
-// const findDataSourceByName = (name) => {
-//     let dataSource = viewer?.dataSources.getByName(name);
-//     debugger
-//     if ( dataSource || dataSource.length === 0) {
-//         dataSource.name = name;
-//         viewer.dataSources.add(dataSource);
-//     } else {
-//         dataSource = dataSource[0];
-//     }
-//     return dataSource;
-// }
 
-//
 const addGeoJsonData = (file, color) => {
     viewer?.dataSources.add(Cesium.GeoJsonDataSource.load(file, {
         stroke: Cesium.Color.fromCssColorString(color).withAlpha(0.5),
@@ -106,17 +100,7 @@ const addGeoJsonData = (file, color) => {
         clampToGround: true,
     }));
 }
-//
-// const toggleGeoJsonData = (name, dataList) => {
-//     const dataSource = findDataSourceByName(name);
-//     if(dataSource?.length === 0) {
-//       for(const data of dataList) {
-//           addGeoJsonData(name, data.file, data.color);
-//       }
-//     }else {
-//         dataSource.show = !dataSource.show;
-//     }
-// }
+
 
 export default {
     viewer,
@@ -124,7 +108,8 @@ export default {
     setCameraView,
     add3DTilesetAndGetIndex,
     toggle3DTileset,
-    set3DTilesetStyle,
+    set3DTilesetTransparency,
+    set3DTilesetShadowMode,
     zoomTo3DTileset,
     addGeoJsonData,
     initMap: async (mapId: string) => {
@@ -152,6 +137,9 @@ export default {
         viewer.camera.percentageChanged = 0.01;
 
         viewer.scene.globe.depthTestAgainstTerrain = true;
+
+        viewer.shadows = true;
+
         try {
             const terrainProvider = await Cesium.CesiumTerrainProvider.fromUrl(
                 'http://192.168.10.3:8002/dem05_MSL', {

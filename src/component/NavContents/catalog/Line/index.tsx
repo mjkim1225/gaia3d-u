@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Stack} from "@mui/material";
 
 import Typography from '@mui/material/Typography';
@@ -21,11 +21,11 @@ import map from "../../../../map";
 
 const LineCatalog = ({data}) => {
 
-    const [subMenu, setSubMenu] = React.useState(false);
+    const [subMenu, setSubMenu] = useState(false);
 
-    const [show, setShow] = React.useState(false);
+    const [show, setShow] = useState(false);
 
-    const [subLegend, setSubLegend] = React.useState(false);
+    const [subLegend, setSubLegend] = useState(false);
 
     useEffect(() => {
         const loadData = async () => {
