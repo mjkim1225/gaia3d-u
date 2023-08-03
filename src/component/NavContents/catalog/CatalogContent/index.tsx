@@ -17,14 +17,19 @@ const Item = styled(Paper)(({theme}) => ({
     maxWidth: 400,
 }));
 
-const CatalogContent = ({ dataList }) => {
+const CatalogContent = ({ dataList, setDataList }) => {
+
+    const removeData = (data) => {
+        setDataList((prevList) => prevList.filter((d) => d !== data));
+    }
+
     return (
         <>
             {dataList.map((data) => (
                 <Box key={dataList.indexOf(data)} sx={{ flexGrow: 1, overflow: 'hidden', px: 1 }}>
                     <Item sx={{ my: 1, mx: 'auto', p: 1 }}>
                         {data.type === '3DTileset' ? (
-                            <Tileset3DCatalog data={data} />
+                            <Tileset3DCatalog data={data} removeData={() => removeData(data) }/>
                         ) : data.type === 'line' ? (
                             <LineCatalog data={data} />
                         ) : null}

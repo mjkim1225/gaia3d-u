@@ -57,6 +57,13 @@ const add3DTilesetAndGetIndex = async (url: string): Promise< number | undefined
     }
 }
 
+const remove3DTileset = (index: number) => {
+    const tilesetObj = viewer?.scene.primitives.get(index);
+    if(tilesetObj) {
+        viewer?.scene.primitives.remove(tilesetObj);
+    }
+}
+
 const toggle3DTileset = async (index: number) => {
     if(viewer) {
         const tilesetObj = viewer.scene.primitives.get(index);
@@ -107,6 +114,7 @@ export default {
     getViewer: (): Viewer | null => viewer,
     setCameraView,
     add3DTilesetAndGetIndex,
+    remove3DTileset,
     toggle3DTileset,
     set3DTilesetTransparency,
     set3DTilesetShadowMode,
@@ -140,6 +148,9 @@ export default {
 
         viewer.shadows = true;
 
+        viewer.terrainShadows = Cesium.ShadowMode.ENABLED;
+        viewer.scene.shadowMap.size = 2048 * 5; //default 2048
+
         try {
             const terrainProvider = await Cesium.CesiumTerrainProvider.fromUrl(
                 'http://192.168.10.3:8002/dem05_MSL', {
@@ -149,8 +160,9 @@ export default {
         } catch (error) {
             console.log(error);
         }
+
         setCameraView(config.DEFAULT_CAMERA_OPTION);
-        setKorDateTime();
+        // setKorDateTime();
     },
 
 };

@@ -13,6 +13,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 import PropTypes from "prop-types";
 
@@ -31,7 +32,7 @@ const SHADOW_MODE_OPTIONS: { label: string; value: ShadowModeType }[] = [
     { label: 'Receive Only', value: 'RECEIVE_ONLY' },
 ];
 
-const Tileset3DCatalog = ({data}) => {
+const Tileset3DCatalog = ({data, removeData}) => {
 
     const [subMenu, setSubMenu] = useState(false);
     const [show, setShow] = useState(true);
@@ -71,6 +72,11 @@ const Tileset3DCatalog = ({data}) => {
         await map.set3DTilesetTransparency(dataIndex, value)
     };
 
+    const remove3DTileset = () => {
+        map.remove3DTileset(dataIndex);
+        removeData(data);
+    }
+
     return (
         <>
             <Stack direction="row" alignItems="center" sx={{p: 1, }}>
@@ -104,8 +110,8 @@ const Tileset3DCatalog = ({data}) => {
                                 <Button size="small" variant="outlined" disabled>
                                     데아터정보
                                 </Button>
-                                <Button size="small" variant="outlined" href="#outlined-buttons">
-                                    X
+                                <Button size="small" variant="outlined" href="#outlined-buttons" onClick={remove3DTileset}>
+                                    <DeleteForeverIcon />
                                 </Button>
                             </div>
                             <div>
