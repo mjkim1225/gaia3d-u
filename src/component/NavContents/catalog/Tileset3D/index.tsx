@@ -65,6 +65,19 @@ const Tileset3DCatalog = ({ data, removeData }) => {
         map.toggle3DTileset(dataIndex);
     }
 
+    // 필터
+    const [height, setHeight] = useState(200);
+    const changeHeight = (value) => {
+        setHeight(value)
+        map.set3DTilesetHeight(dataIndex, value)
+    }
+    const [floor, setFloor] = useState(50);
+    const changeFloor = (value) => {
+        setFloor(value)
+        map.set3DTilesetFloor(dataIndex, value)
+    }
+
+    // 투명도
     const [transparency, setTransparency] = useState(1);
 
     const changeTransparency = (value) => {
@@ -130,6 +143,20 @@ const Tileset3DCatalog = ({ data, removeData }) => {
                         </div>
                         <div>
                             필터(건축물)
+                            - 높이로 필터 0~200
+                            <Slider aria-label="Volume" step={1} min={0} max={200}
+                                    value={height}
+                                    onChange={(event: Event, newValue: number | number[]) => {
+                                        changeHeight(newValue as number);
+                                    }}
+                            />
+                            - 건물 층수로 필터 0~50
+                            <Slider aria-label="Volume" step={1} min={0} max={50}
+                                    value={floor}
+                                    onChange={(event: Event, newValue: number | number[]) => {
+                                        changeFloor(newValue as number);
+                                    }}
+                            />
                         </div>
                         <div>
                             투명도

@@ -39,6 +39,10 @@ const LineCatalog = ({data}) => {
         loadData();
     }, []);
 
+    const zoom = () => {
+        console.log("zoom")
+    }
+
     const showData = async () => {
         setShow(!show);
         data.dataList.map(async (d) => {
@@ -79,7 +83,7 @@ const LineCatalog = ({data}) => {
                     <Stack direction="column" spacing={1} >
                         <Box sx={{ '& button': { m: 1 } }}>
                             <div>
-                                <Button size="small" variant="contained" sx={{ width: '30%' }}>
+                                <Button size="small" variant="contained" onClick={zoom} sx={{ width: '30%' }}>
                                     카메라
                                 </Button>
                                 <Button size="small" variant="outlined" disabled sx={{ width: '30%' }}>

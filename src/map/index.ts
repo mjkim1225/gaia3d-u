@@ -80,7 +80,7 @@ const set3DTilesetTransparency = (index: number, transparency: number) => {
                 conditions: [
                     ["true", `color('lightgrey', ${transparency})`],
                 ]
-            },
+            }
         });
     }
 }
@@ -121,11 +121,14 @@ const toggleGeoJsonData = (name) => {
     }
 }
 
-const createPlaneUpdateFunction
-    = (plane) => () => {
-        plane.distance = config.CLIPPING_OPTIONS.BOX_SIZE / 2;
-        return plane;
+const zoomToGeoJsonData = (name) => {
+    if(viewer) {
+        const dataSource = viewer?.dataSources.getByName(name)[0];
+        if(dataSource) {
+            viewer?.zoomTo(dataSource);
+        }
     }
+}
 
 
 const createClippingPlane = (index) => {
@@ -133,80 +136,160 @@ const createClippingPlane = (index) => {
         const tilesetObj = viewer.scene.primitives.get(index);
 
         if (tilesetObj instanceof Cesium.Cesium3DTileset) {
-            // 1. Create clipping planes for the cube (6 faces)
+            const {BOX_SIZE, DIRECTIONS, parsingDirection, naming} = config.CLIPPING_OPTIONS;
+            const planeEntities: Cesium.Entity[] = [];
             const clippingPlanes = new Cesium.ClippingPlaneCollection();
             const faces = [
                 {
-                    direction: "Right",
+                    direction: DIRECTIONS.RIGHT,
                     value: new Cesium.Cartesian3(1.0, 0.0, 0.0),
                 },
                 {
-                    direction: "Left",
+                    direction: DIRECTIONS.LEFT,
                     value: new Cesium.Cartesian3(-1.0, 0.0, 0.0),
+
                 },
                 {
-                    direction: "Top",
+                    direction: DIRECTIONS.FRONT,
                     value: new Cesium.Cartesian3(0.0, 1.0, 0.0),
                 },
                 {
-                    direction: "Bottom",
+                    direction: DIRECTIONS.BACK,
                     value: new Cesium.Cartesian3(0.0, -1.0, 0.0),
                 },
                 {
-                    direction: "Front",
+                    direction: DIRECTIONS.TOP,
                     value: new Cesium.Cartesian3(0.0, 0.0, 1.0),
                 },
                 {
-                    direction: "Back",
+                    direction: DIRECTIONS.BOTTOM,
                     value: new Cesium.Cartesian3(0.0, 0.0, -1.0),
                 }
             ]
 
             for (let i = 0; i < faces.length; i++) {
                 const cartesian = faces[i].value;
-                const plane = new Cesium.ClippingPlane( cartesian, 0.0 );
+                const plane = new Cesium.ClippingPlane( cartesian, (-1) * BOX_SIZE / 2 );
                 clippingPlanes.add(plane);
             }
 
-            // 2. Apply the clipping planes to the tileset
             tilesetObj.clippingPlanes = clippingPlanes;
 
-            // 3. Calculate the bounding sphere center of the tileset
             const boundingSphere = tilesetObj.boundingSphere;
             const center = boundingSphere.center;
 
-            const camera = viewer.scene.camera;
+            let targetY =  BOX_SIZE / 2;
 
-            const size = config.CLIPPING_OPTIONS.BOX_SIZE;
-            for (let i = 0; i < faces.length; i++) {
+            const createPlaneUpdateFunction
+                = (plane) => () => {
+                plane.distance = targetY;
+                return plane;
+            }
+
+            const size = BOX_SIZE;
+            for (let j = 0; j < faces.length; j++) {
+                const direction = faces[j].direction;
                 const planeEntity = viewer.entities.add({
-                    id: config.CLIPPING_OPTIONS.naming(index, faces[i].direction),
+                    id: naming(index, direction),
                     position: center,
                     plane: {
                         dimensions: new Cesium.Cartesian2(size,size),
                         material: Cesium.Color.WHITE.withAlpha(0.1),
                         plane: new Cesium.CallbackProperty(
-                            createPlaneUpdateFunction(clippingPlanes.get(i)),
+                            createPlaneUpdateFunction(clippingPlanes.get(j)),
                             false
                         ),
                         outline: true,
                         outlineColor: Cesium.Color.WHITE,
                     },
                 });
-
-                // planeEntities.push(planeEntity);
+                planeEntities.push(planeEntity);
             }
 
-            // 8. Enable clipping plane
             tilesetObj.clippingPlanes.enabled = true;
 
-            // 9. Set the color of the clipping planes
             tilesetObj.clippingPlanes.edgeColor = Cesium.Color.WHITE;
+
+            /**
+             * HANDLER
+             */
+            const scene = viewer.scene;
+            let selectedPlane = null;
+            let selectedEntity = null;
+            let direction = null;
+            const handlerControl = new Cesium.ScreenSpaceEventHandler(scene.canvas);
+            handlerControl.setInputAction(function (movement) {
+                const pickedObject = scene.pick(movement.position);
+                // console.log(pickedObject)
+                if (
+                    Cesium.defined(pickedObject) &&
+                    Cesium.defined(pickedObject.id) &&
+                    Cesium.defined(pickedObject.id.plane)
+                ) {
+                    selectedEntity = pickedObject.id;
+                    selectedPlane = selectedEntity.plane;
+                    direction = parsingDirection(selectedEntity.id);
+                    selectedPlane.material = Cesium.Color.RED.withAlpha(0.05);
+                    selectedPlane.outlineColor = Cesium.Color.RED;
+                    scene.screenSpaceCameraController.enableInputs = false;
+                }
+            }, Cesium.ScreenSpaceEventType.LEFT_DOWN);
+
+            handlerControl.setInputAction(function () {
+                if (Cesium.defined(selectedPlane)) {
+                    selectedPlane.material = Cesium.Color.WHITE.withAlpha(0.1);
+                    selectedPlane.outlineColor = Cesium.Color.WHITE;
+                    selectedPlane = undefined;
+                    direction = null;
+                }
+                scene.screenSpaceCameraController.enableInputs = true;
+            }, Cesium.ScreenSpaceEventType.LEFT_UP);
+
+            handlerControl.setInputAction(function (movement) {
+                if (Cesium.defined(selectedEntity) && Cesium.defined(selectedPlane)) {
+                    // Get Cartesian3 of intersection
+                    const deltaY = (movement.startPosition.y - movement.endPosition.y) /2
+                    targetY += deltaY;
+                    // const pickedPosition = scene.pickPosition(movement.endPosition);
+                    //
+                    // for (let entity of planeEntities) {
+                    //     entity.position = pickedPosition;
+                    // }
+                }
+            }.bind(this), Cesium.ScreenSpaceEventType.MOUSE_MOVE);
         }
     }
 };
 
+const set3DTilesetHeight = (index, height) => {
+    if (viewer) {
+        const tilesetObj = viewer.scene.primitives.get(index);
+        const originStyle = tilesetObj.style;
+        tilesetObj.style = new Cesium.Cesium3DTileStyle({
+            color: originStyle.color,
+            show:  {
+                conditions: [
+                    ["true", "${BLDH_HGT} < "+ height],
+                ]
+            }
+        });
+    }
+}
 
+const set3DTilesetFloor = (index, floor) => {
+    if (viewer) {
+        const tilesetObj = viewer.scene.primitives.get(index);
+        const originStyle = tilesetObj.style;
+        tilesetObj.style = new Cesium.Cesium3DTileStyle({
+            color: originStyle.color,
+            show:  {
+                conditions: [
+                    ["true", "${BFLR_CO} < "+ floor],
+                ]
+            }
+        });
+    }
+}
 
 export default {
     viewer,
@@ -220,7 +303,10 @@ export default {
     zoomTo3DTileset,
     addGeoJsonData,
     toggleGeoJsonData,
+    zoomToGeoJsonData,
     createClippingPlane,
+    set3DTilesetHeight,
+    set3DTilesetFloor,
     initMap: async (mapId: string) => {
         Cesium.Ion.defaultAccessToken = config.ACCESS_TOKEN;
 
