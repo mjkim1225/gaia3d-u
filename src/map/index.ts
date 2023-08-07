@@ -3,8 +3,6 @@ import * as Cesium from 'cesium';
 import {CameraOption} from "./types";
 import config from './config';
 
-import {getTodayWithTime, plus9hours} from "../utils/datetime";
-
 type Viewer = Cesium.Viewer;
 
 let viewer: Viewer | null = null;
@@ -23,13 +21,6 @@ const setCameraView = (params: CameraOption) => {
         },
     });
 };
-
-const setKorDateTime = (timeStr: string | void) => {
-    // ex time "08:10:05"
-    const today = timeStr? getTodayWithTime(timeStr) : new Date();
-    plus9hours(today);
-    if(viewer) viewer.clock.currentTime = Cesium.JulianDate.fromDate(today);
-}
 
 const add3DTilesetAndGetIndex = async (url: string): Promise< number | undefined> => {
     if(viewer) {
@@ -136,7 +127,7 @@ const createClippingPlane = (index) => {
         const tilesetObj = viewer.scene.primitives.get(index);
 
         if (tilesetObj instanceof Cesium.Cesium3DTileset) {
-            const {BOX_SIZE, DIRECTIONS, parsingDirection, naming} = config.CLIPPING_OPTIONS;
+            const {BOX_SIZE, DIRECTIONS, naming} = config.CLIPPING_OPTIONS;
             const planeEntities: Cesium.Entity[] = [];
             const clippingPlanes = new Cesium.ClippingPlaneCollection();
             const faces = [
@@ -178,7 +169,7 @@ const createClippingPlane = (index) => {
             const boundingSphere = tilesetObj.boundingSphere;
             const center = boundingSphere.center;
 
-            let targetY =  BOX_SIZE / 2;
+            let targetY = (-1) * BOX_SIZE / 2;
 
             const createPlaneUpdateFunction
                 = (plane) => () => {
@@ -214,9 +205,8 @@ const createClippingPlane = (index) => {
              * HANDLER
              */
             const scene = viewer.scene;
-            let selectedPlane = null;
-            let selectedEntity = null;
-            let direction = null;
+            let selectedPlane = undefined;
+            let selectedEntity = undefined;
             const handlerControl = new Cesium.ScreenSpaceEventHandler(scene.canvas);
             handlerControl.setInputAction(function (movement) {
                 const pickedObject = scene.pick(movement.position);
@@ -227,20 +217,25 @@ const createClippingPlane = (index) => {
                     Cesium.defined(pickedObject.id.plane)
                 ) {
                     selectedEntity = pickedObject.id;
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
                     selectedPlane = selectedEntity.plane;
-                    direction = parsingDirection(selectedEntity.id);
-                    selectedPlane.material = Cesium.Color.RED.withAlpha(0.05);
-                    selectedPlane.outlineColor = Cesium.Color.RED;
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    selectedPlane.material = Cesium.Color.RED.withAlpha(0.05); selectedPlane.outlineColor = Cesium.Color.RED;
                     scene.screenSpaceCameraController.enableInputs = false;
                 }
             }, Cesium.ScreenSpaceEventType.LEFT_DOWN);
 
             handlerControl.setInputAction(function () {
                 if (Cesium.defined(selectedPlane)) {
-                    selectedPlane.material = Cesium.Color.WHITE.withAlpha(0.1);
-                    selectedPlane.outlineColor = Cesium.Color.WHITE;
-                    selectedPlane = undefined;
-                    direction = null;
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    selectedPlane.material = Cesium.Color.WHITE.withAlpha(0.1); selectedPlane.outlineColor = Cesium.Color.WHITE;
+
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    selectedEntity = undefined; selectedPlane = undefined;
                 }
                 scene.screenSpaceCameraController.enableInputs = true;
             }, Cesium.ScreenSpaceEventType.LEFT_UP);
@@ -248,13 +243,15 @@ const createClippingPlane = (index) => {
             handlerControl.setInputAction(function (movement) {
                 if (Cesium.defined(selectedEntity) && Cesium.defined(selectedPlane)) {
                     // Get Cartesian3 of intersection
-                    const deltaY = (movement.startPosition.y - movement.endPosition.y) /2
-                    targetY += deltaY;
-                    // const pickedPosition = scene.pickPosition(movement.endPosition);
-                    //
-                    // for (let entity of planeEntities) {
-                    //     entity.position = pickedPosition;
-                    // }
+                    // const deltaY = (movement.startPosition.y - movement.endPosition.y) ;
+                    // targetY += -1 * deltaY;
+                    const pickedPosition = scene.pickPosition(movement.endPosition);
+
+                    for (const entity of planeEntities) {
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-ignore
+                        entity.position = pickedPosition;
+                    }
                 }
             }.bind(this), Cesium.ScreenSpaceEventType.MOUSE_MOVE);
         }
@@ -264,9 +261,13 @@ const createClippingPlane = (index) => {
 const set3DTilesetHeight = (index, height) => {
     if (viewer) {
         const tilesetObj = viewer.scene.primitives.get(index);
-        const originStyle = tilesetObj.style;
+        // const originStyle = tilesetObj.style;
         tilesetObj.style = new Cesium.Cesium3DTileStyle({
-            color: originStyle.color,
+            color: {
+                conditions: [
+                    ["true", "color('lightgrey')"],
+                ]
+            },
             show:  {
                 conditions: [
                     ["true", "${BLDH_HGT} < "+ height],
@@ -279,9 +280,12 @@ const set3DTilesetHeight = (index, height) => {
 const set3DTilesetFloor = (index, floor) => {
     if (viewer) {
         const tilesetObj = viewer.scene.primitives.get(index);
-        const originStyle = tilesetObj.style;
         tilesetObj.style = new Cesium.Cesium3DTileStyle({
-            color: originStyle.color,
+            color: {
+                conditions: [
+                    ["true", "color('lightgrey')"],
+                ]
+            },
             show:  {
                 conditions: [
                     ["true", "${BFLR_CO} < "+ floor],
