@@ -100,4 +100,142 @@ export default class Gaia3DTileset {
             show: show,
         });
     }
+
+    createClippingPlanes() {
+        if (this.tilesetObj) {
+
+            const {BOX_SIZE, DIRECTIONS, naming} = config.CLIPPING_OPTIONS;
+            const planeEntities = [];
+            const clippingPlanes = new Cesium.ClippingPlaneCollection();
+            const faces = [
+                {
+                    direction: DIRECTIONS.RIGHT,
+                    value: new Cesium.Cartesian3(1.0, 0.0, 0.0),
+                },
+                {
+                    direction: DIRECTIONS.LEFT,
+                    value: new Cesium.Cartesian3(-1.0, 0.0, 0.0),
+
+                },
+                {
+                    direction: DIRECTIONS.FRONT,
+                    value: new Cesium.Cartesian3(0.0, 1.0, 0.0),
+                },
+                {
+                    direction: DIRECTIONS.BACK,
+                    value: new Cesium.Cartesian3(0.0, -1.0, 0.0),
+                },
+                {
+                    direction: DIRECTIONS.TOP,
+                    value: new Cesium.Cartesian3(0.0, 0.0, 1.0),
+                },
+                {
+                    direction: DIRECTIONS.BOTTOM,
+                    value: new Cesium.Cartesian3(0.0, 0.0, -1.0),
+                }
+            ]
+
+            for (let i = 0; i < faces.length; i++) {
+                const cartesian = faces[i].value;
+                const plane = new Cesium.ClippingPlane( cartesian, (-1) * BOX_SIZE / 2 );
+                clippingPlanes.add(plane);
+            }
+
+            this.tilesetObj.clippingPlanes = clippingPlanes;
+
+            const boundingSphere = this.tilesetObj.boundingSphere;
+            const center = boundingSphere.center;
+
+            let targetY = (-1) * BOX_SIZE / 2;
+
+            const createPlaneUpdateFunction
+                = (plane) => () => {
+                plane.distance = targetY;
+                return plane;
+            }
+
+            const size = BOX_SIZE;
+            for (let j = 0; j < faces.length; j++) {
+                const direction = faces[j].direction;
+                const planeEntity = this.viewer?.entities.add({
+                    id: naming('tmp', direction),
+                    position: center,
+                    plane: {
+                        dimensions: new Cesium.Cartesian2(size,size),
+                        material: Cesium.Color.WHITE.withAlpha(0.1),
+                        plane: new Cesium.CallbackProperty(
+                            createPlaneUpdateFunction(clippingPlanes.get(j)),
+                            false
+                        ),
+                        outline: true,
+                        outlineColor: Cesium.Color.WHITE,
+                    },
+                });
+                planeEntities.push(planeEntity);
+            }
+
+            this.tilesetObj.clippingPlanes.enabled = true;
+
+            this.tilesetObj.clippingPlanes.edgeColor = Cesium.Color.WHITE;
+
+            /**
+             * HANDLER
+             */
+            const scene = this.viewer?.scene;
+            let selectedPlane = undefined;
+            let selectedEntity = undefined;
+            const handlerControl = new Cesium.ScreenSpaceEventHandler(scene?.canvas);
+            handlerControl.setInputAction(function (movement) {
+                const pickedObject = scene?.pick(movement.position);
+                // console.log(pickedObject)
+                if (
+                    Cesium.defined(pickedObject) &&
+                    Cesium.defined(pickedObject.id) &&
+                    Cesium.defined(pickedObject.id.plane)
+                ) {
+                    selectedEntity = pickedObject.id;
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    selectedPlane = selectedEntity.plane;
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    selectedPlane.material = Cesium.Color.RED.withAlpha(0.05); selectedPlane.outlineColor = Cesium.Color.RED;
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    scene.screenSpaceCameraController.enableInputs = false;
+                }
+            }, Cesium.ScreenSpaceEventType.LEFT_DOWN);
+
+            handlerControl.setInputAction(function () {
+                if (Cesium.defined(selectedPlane)) {
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    selectedPlane.material = Cesium.Color.WHITE.withAlpha(0.1); selectedPlane.outlineColor = Cesium.Color.WHITE;
+
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    selectedEntity = undefined; selectedPlane = undefined;
+                }
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                scene.screenSpaceCameraController.enableInputs = true;
+            }, Cesium.ScreenSpaceEventType.LEFT_UP);
+
+            handlerControl.setInputAction(function (movement) {
+                if (Cesium.defined(selectedEntity) && Cesium.defined(selectedPlane)) {
+                    // Get Cartesian3 of intersection
+                    // const deltaY = (movement.startPosition.y - movement.endPosition.y) ;
+                    // targetY += -1 * deltaY;
+                    const pickedPosition = scene?.pickPosition(movement.endPosition);
+
+                    for (const entity of planeEntities) {
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-ignore
+                        entity.position = pickedPosition;
+                    }
+                }
+            }.bind(this), Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+        }
+    }
+
 }
