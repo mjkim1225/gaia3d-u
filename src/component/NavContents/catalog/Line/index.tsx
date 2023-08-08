@@ -67,26 +67,22 @@ const LineCatalog = ({data}) => {
                     {subMenu ? <KeyboardArrowDownIcon/> : <KeyboardArrowLeftIcon/>}
                 </IconButton>
             </Stack>
-            {
-                subMenu ?
-                    <Stack direction="column" spacing={1} >
-                        <Box sx={{ '& button': { m: 1 } }}>
-                            <div>
-                                <Button size="small" variant="contained" onClick={zoom} sx={{ width: '30%' }}>
-                                    카메라
-                                </Button>
-                                <Button size="small" variant="outlined" disabled sx={{ width: '30%' }}>
-                                    데아터정보
-                                </Button>
-                                <Button size="small" variant="contained" href="#outlined-buttons" sx={{ width: '10%' }}>
-                                    <DeleteForeverIcon />
-                                </Button>
-                            </div>
-                            <Legend dataList={data.dataList} />
-                        </Box>
-                    </Stack>
-                    : null
-            }
+            <Stack direction="column" spacing={1} sx={{ display: subMenu? 'block' : 'none'}}>
+                <Box sx={{ '& button': { m: 1 } }}>
+                    <div>
+                        <Button size="small" variant="contained" onClick={zoom} sx={{ width: '30%' }}>
+                            카메라
+                        </Button>
+                        <Button size="small" variant="outlined" disabled sx={{ width: '30%' }}>
+                            데아터정보
+                        </Button>
+                        <Button size="small" variant="contained" href="#outlined-buttons" sx={{ width: '10%' }}>
+                            <DeleteForeverIcon />
+                        </Button>
+                    </div>
+                    <Legend dataList={data.dataList} />
+                </Box>
+            </Stack>
         </>
     );
 }

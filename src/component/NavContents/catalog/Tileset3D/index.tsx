@@ -75,28 +75,26 @@ const Tileset3DCatalog = ({ data, removeData }) => {
                     {subMenu ? <KeyboardArrowDownIcon/> : <KeyboardArrowLeftIcon/>}
                 </IconButton>
             </Stack>
-            {subMenu ? (
-                <Stack direction="column" spacing={1} >
-                    <Box sx={{ '& button': { m: 1 } }}>
-                        <div>
-                            <Button size="small" variant="contained" onClick={zoom} sx={{ width: '30%' }}>
-                                카메라
-                            </Button>
-                            <Button size="small" variant="outlined" disabled sx={{ width: '30%' }}>
-                                데아터정보
-                            </Button>
-                            <Button size="small" variant="contained" href="#outlined-buttons" onClick={remove3DTileset} sx={{ width: '10%' }}>
-                                <DeleteForeverIcon />
-                            </Button>
-                        </div>
-                        <Filter dataIndex={dataIndex} />
-                        <Transparency dataIndex={dataIndex} />
-                        <Shadow dataIndex={dataIndex}/>
-                        <Clipping dataIndex={dataIndex}/>
-                        <Coloring dataIndex={dataIndex}/>
-                    </Box>
-                </Stack>
-            ) : null}
+            <Stack direction="column" spacing={1} sx={{ display: subMenu? 'block' : 'none'}}>
+                <Box sx={{ '& button': { m: 1 } }}>
+                    <div>
+                        <Button size="small" variant="contained" onClick={zoom} sx={{ width: '30%' }}>
+                            카메라
+                        </Button>
+                        <Button size="small" variant="outlined" disabled sx={{ width: '30%' }}>
+                            데아터정보
+                        </Button>
+                        <Button size="small" variant="contained" href="#outlined-buttons" onClick={remove3DTileset} sx={{ width: '10%' }}>
+                            <DeleteForeverIcon />
+                        </Button>
+                    </div>
+                    <Filter dataIndex={dataIndex} />
+                    <Transparency dataIndex={dataIndex} />
+                    <Shadow dataIndex={dataIndex}/>
+                    <Clipping dataIndex={dataIndex}/>
+                    <Coloring dataIndex={dataIndex}/>
+                </Box>
+            </Stack>
         </>
     );
 }

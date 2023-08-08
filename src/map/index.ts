@@ -93,7 +93,7 @@ const zoomTo3DTileset = (index: number) => {
 
 const addGeoJsonData = (name, file, color) => {
     Cesium.GeoJsonDataSource.load(file, {
-        stroke: Cesium.Color.fromCssColorString(color).withAlpha(0.5),
+        stroke: Cesium.Color.fromCssColorString(color),
         fill: color,
         strokeWidth: 4,
         clampToGround: true,
@@ -120,7 +120,6 @@ const zoomToGeoJsonData = (name) => {
         }
     }
 }
-
 
 const createClippingPlane = (index) => {
     if (viewer) {
