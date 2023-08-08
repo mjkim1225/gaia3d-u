@@ -63,7 +63,9 @@ const Cesium3DTileStyle = (() => {
             },
             get: function() {
                 const showCondition = this.show.conditions;
-                let show = undefined;
+                let show = {
+                    conditions: [["false","false"]]
+                };
                 if(showCondition.length > 0) {
                     const wholeConditions = this.show.conditions
                         .filter(([condition]) => condition)
