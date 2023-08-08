@@ -33,13 +33,7 @@ const add3DTilesetAndGetIndex = async (url: string): Promise< number | undefined
                 lightingModel: Cesium.LightingModel.UNLIT
             })
 
-            tileset.style = new Cesium.Cesium3DTileStyle({
-                color: {
-                    conditions: [
-                        ["true", "color('lightgrey')"],
-                    ]
-                },
-            });
+            tileset.style = config.Cesium3DTileStyle.get();
 
             viewer.scene.primitives.add(tileset, index);
             return index;
@@ -66,13 +60,8 @@ const toggle3DTileset = (index: number) => {
 const set3DTilesetTransparency = (index: number, transparency: number) => {
     const tilesetObj = viewer?.scene.primitives.get(index);
     if(tilesetObj) {
-        tilesetObj.style = new Cesium.Cesium3DTileStyle({
-            color: {
-                conditions: [
-                    ["true", `color('lightgrey', ${transparency})`],
-                ]
-            }
-        });
+        config.Cesium3DTileStyle.setColor(`color('lightgrey', ${transparency})`);
+        tilesetObj.style = config.Cesium3DTileStyle.get();
     }
 }
 
@@ -243,37 +232,16 @@ const createClippingPlane = (index) => {
 const set3DTilesetHeight = (index, height) => {
     if (viewer) {
         const tilesetObj = viewer.scene.primitives.get(index);
-        // const originStyle = tilesetObj.style;
-        tilesetObj.style = new Cesium.Cesium3DTileStyle({
-            color: {
-                conditions: [
-                    ["true", "color('lightgrey')"],
-                ]
-            },
-            show:  {
-                conditions: [
-                    ["true", "${BLDH_HGT} < "+ height],
-                ]
-            }
-        });
+        config.Cesium3DTileStyle.addShow("BLDH_HGT", "${BLDH_HGT} < "+ height);
+        tilesetObj.style = config.Cesium3DTileStyle.get();
     }
 }
 
 const set3DTilesetFloor = (index, floor) => {
     if (viewer) {
         const tilesetObj = viewer.scene.primitives.get(index);
-        tilesetObj.style = new Cesium.Cesium3DTileStyle({
-            color: {
-                conditions: [
-                    ["true", "color('lightgrey')"],
-                ]
-            },
-            show:  {
-                conditions: [
-                    ["true", "${BFLR_CO} < "+ floor],
-                ]
-            }
-        });
+        config.Cesium3DTileStyle.addShow("BFLR_CO", "${BFLR_CO} < "+ floor);
+        tilesetObj.style = config.Cesium3DTileStyle.get();
     }
 }
 
@@ -320,6 +288,7 @@ export default {
         viewer.shadows = true;
 
         viewer.terrainShadows = Cesium.ShadowMode.ENABLED;
+        // 그림자 크기 : 높을수록 자연스러운 느낌
         viewer.scene.shadowMap.size = 2048 * 5; //default 2048
 
         try {

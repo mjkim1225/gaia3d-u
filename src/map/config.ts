@@ -23,6 +23,67 @@ const SHADOW_MODE = {
     RECEIVE_ONLY: Cesium.ShadowMode.RECEIVE_ONLY,
 }
 
+const Cesium3DTileStyle = (() => {
+    const style
+        : {
+            color: {
+                conditions: string[][]
+            },
+            show: {
+                conditions: string[][]
+            },
+            setColor: (color: string) => void,
+            addShow: (field: string, condition: string) => void,
+            get: () => Cesium.Cesium3DTileStyle
+        }
+        =
+        {
+            color: {
+                conditions: [["true", "color('lightgrey')"]]
+            },
+            show: {
+                conditions: []
+            },
+            setColor: function(color) {
+                this.color = {
+                    conditions: [["true", color]]
+                };
+            },
+            addShow: function(field, condition) {
+                const conditions = this.show.conditions;
+                let pushed = false;
+                for (let i = 0; i < conditions.length; i++) {
+                    if(conditions[i][1].indexOf(field) > -1 ) {
+                        conditions[i] = ['true', condition];
+                        pushed = true;
+                        break;
+                    }
+                }
+                if(!pushed) this.show.conditions.push(['true', condition]);
+            },
+            get: function() {
+                const showCondition = this.show.conditions;
+                let show = undefined;
+                if(showCondition.length > 0) {
+                    const wholeConditions = this.show.conditions
+                        .filter(([condition]) => condition)
+                        .map(([, condition]) => condition)
+                        .join(' && ');
+                    show = {
+                        conditions: [["true", wholeConditions]]
+                    }
+                }
+
+                return new Cesium.Cesium3DTileStyle({
+                    color: this.color,
+                    show: show
+                });
+            }
+        };
+
+    return style;
+})();
+
 const CLIPPING_OPTIONS = {
     BOX_SIZE: 700,
     DIRECTIONS: {
@@ -41,5 +102,6 @@ export default {
     ACCESS_TOKEN,
     DEFAULT_CAMERA_OPTION,
     SHADOW_MODE,
-    CLIPPING_OPTIONS
+    Cesium3DTileStyle,
+    CLIPPING_OPTIONS,
 };
