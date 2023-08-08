@@ -292,11 +292,10 @@ export default {
         viewer.scene.shadowMap.size = 2048 * 5; //default 2048
 
         try {
-            const terrainProvider = await Cesium.CesiumTerrainProvider.fromUrl(
+            viewer.terrainProvider = await Cesium.CesiumTerrainProvider.fromUrl(
                 'http://192.168.10.3:8002/dem05_MSL', {
                     requestVertexNormals: true
-                })
-            viewer.terrainProvider = terrainProvider;
+                });
         } catch (error) {
             console.log(error);
         }
