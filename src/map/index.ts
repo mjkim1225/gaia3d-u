@@ -83,14 +83,6 @@ const set3DTilesetShadowMode = (index: number, mode: keyof typeof config.SHADOW_
     }
 }
 
-const zoomTo3DTileset = (index: number) => {
-    const tilesetObj = viewer?.scene.primitives.get(index);
-
-    if(tilesetObj) {
-        viewer?.zoomTo(tilesetObj);
-    }
-}
-
 const addGeoJsonData = (name, file, color) => {
     Cesium.GeoJsonDataSource.load(file, {
         stroke: Cesium.Color.fromCssColorString(color),
@@ -108,15 +100,6 @@ const toggleGeoJsonData = (name) => {
         const dataSource = viewer?.dataSources.getByName(name)[0];
         if(dataSource) {
             dataSource.show = !dataSource.show;
-        }
-    }
-}
-
-const zoomToGeoJsonData = (name) => {
-    if(viewer) {
-        const dataSource = viewer?.dataSources.getByName(name)[0];
-        if(dataSource) {
-            viewer?.zoomTo(dataSource);
         }
     }
 }
@@ -303,10 +286,8 @@ export default {
     toggle3DTileset,
     set3DTilesetTransparency,
     set3DTilesetShadowMode,
-    zoomTo3DTileset,
     addGeoJsonData,
     toggleGeoJsonData,
-    zoomToGeoJsonData,
     createClippingPlane,
     set3DTilesetHeight,
     set3DTilesetFloor,

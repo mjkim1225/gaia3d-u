@@ -34,14 +34,14 @@ const Tileset3DCatalog = ({ data, removeData }) => {
             (index) => {
                 if (index !== undefined) {
                     setDataIndex(index);
-                    map.zoomTo3DTileset(index);
+                    map.setCameraView(data.cameraOption);
                 }
             }
         );
     }, []);
 
     const zoom = () => {
-        map.zoomTo3DTileset(dataIndex);
+        map.setCameraView(data.cameraOption);
     }
 
     const showData = () => {

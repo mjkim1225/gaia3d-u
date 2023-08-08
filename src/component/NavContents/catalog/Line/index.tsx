@@ -31,12 +31,13 @@ const LineCatalog = ({data}) => {
             });
             setShow(true);
         };
+        map.setCameraView(data.cameraOption);
 
         loadData();
     }, []);
 
     const zoom = () => {
-        console.log("zoom")
+        map.setCameraView(data.cameraOption);
     }
 
     const showData = async () => {

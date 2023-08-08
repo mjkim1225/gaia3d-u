@@ -18,6 +18,14 @@ const railways = [
         nameEng: "seoul subway",
         cityKor: "서울시",
         cityEng: "seoul",
+        cameraOption: {
+            longitude: 126.98465233162544,
+            latitude: 37.35324873000187,
+            altitude: 15000,
+            heading: 0.0,
+            pitch: -40.0,
+            roll: 0.0
+        },
         dataList: [
             {
                 id: 0,
