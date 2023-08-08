@@ -3,7 +3,6 @@ import { IconButton, Typography, Box } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import Slider from "@mui/material/Slider";
-import map from "../../../../map";
 
 const Transparency = ({ tileset }) => {
     const [open, setOpen] = useState(true);
@@ -43,6 +42,7 @@ const Transparency = ({ tileset }) => {
                 >
                     <Slider aria-label="Volume" step={0.1} marks min={0} max={1}
                             value={transparency}
+                            valueLabelDisplay="auto"
                             onChange={(event: Event, newValue: number | number[]) => {
                                 changeTransparency(newValue as number);
                             }}

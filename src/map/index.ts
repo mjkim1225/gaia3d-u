@@ -4,6 +4,7 @@ import {CameraOption} from "./types";
 import config from './config';
 
 import Gaia3DTileset from "./3Dtileset/Gaia3DTileset";
+import GaiaGeoJsonDataSource from "./GeoJson/GaiaGeoJsonDataSource";
 
 type Viewer = Cesium.Viewer;
 
@@ -24,27 +25,6 @@ const setCameraView = (params: CameraOption) => {
     });
 };
 
-
-const addGeoJsonData = (name, file, color) => {
-    Cesium.GeoJsonDataSource.load(file, {
-        stroke: Cesium.Color.fromCssColorString(color),
-        fill: color,
-        strokeWidth: 4,
-        clampToGround: true,
-    }).then((dataSource) => {
-        dataSource.name = name;
-        viewer?.dataSources.add(dataSource);
-    });
-}
-
-const toggleGeoJsonData = (name) => {
-    if(viewer) {
-        const dataSource = viewer?.dataSources.getByName(name)[0];
-        if(dataSource) {
-            dataSource.show = !dataSource.show;
-        }
-    }
-}
 
 const createClippingPlane = (index) => {
     if (viewer) {
@@ -187,10 +167,8 @@ export default {
     getViewer: (): Viewer | null => viewer,
     setCameraView,
 
-    Gaia3DTileset,
+    Gaia3DTileset, GaiaGeoJsonDataSource,
 
-    addGeoJsonData,
-    toggleGeoJsonData,
     createClippingPlane,
     initMap: async (mapId: string) => {
         Cesium.Ion.defaultAccessToken = config.ACCESS_TOKEN;

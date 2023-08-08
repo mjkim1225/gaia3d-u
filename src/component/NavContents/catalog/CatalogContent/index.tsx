@@ -31,7 +31,7 @@ const CatalogContent = ({ dataList, setDataList }) => {
                         {data.type === '3DTileset' ? (
                             <Tileset3DCatalog data={data} removeData={() => removeData(data) }/>
                         ) : data.type === 'line' ? (
-                            <LineCatalog data={data} />
+                            <LineCatalog data={data} removeData={() => removeData(data) }/>
                         ) : null}
                     </Item>
                 </Box>

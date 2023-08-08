@@ -18,22 +18,21 @@ import map from "../../../../map";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import Legend from "./Legend";
 
-const LineCatalog = ({data}) => {
+const LineCatalog = ({ data, removeData }) => {
 
     const [subMenu, setSubMenu] = useState(false);
 
-    const [show, setShow] = useState(false);
+    const [show, setShow] = useState(true);
+
+    // @ts-ignore
+    const [line, setLine] = useState<map.GaiaGeoJsonDataSource | null>(null);
 
     useEffect(() => {
-        const loadData = async () => {
-            data.dataList.map(async (d) => {
-                await map.addGeoJsonData(d.nameEng, d.url, d.color);
-            });
-            setShow(true);
-        };
-        map.setCameraView(data.cameraOption);
+        const viewer = map.getViewer();
+        const _line = new map.GaiaGeoJsonDataSource(viewer, data.dataList);
+        setLine(_line);
 
-        loadData();
+        zoom();
     }, []);
 
     const zoom = () => {
@@ -42,9 +41,12 @@ const LineCatalog = ({data}) => {
 
     const showData = async () => {
         setShow(!show);
-        data.dataList.map(async (d) => {
-            map.toggleGeoJsonData(d.nameEng);
-        });
+        line.toggle();
+    }
+
+    const remove = () => {
+        line.remove();
+        removeData(data);
     }
 
     return (
@@ -77,7 +79,11 @@ const LineCatalog = ({data}) => {
                         <Button size="small" variant="outlined" disabled sx={{ width: '30%' }}>
                             데아터정보
                         </Button>
-                        <Button size="small" variant="contained" href="#outlined-buttons" sx={{ width: '10%' }}>
+                        <Button size="small"
+                                sx={{ width: '10%' }}
+                                variant="contained"
+                                href="#outlined-buttons"
+                                onClick={remove} >
                             <DeleteForeverIcon />
                         </Button>
                     </div>

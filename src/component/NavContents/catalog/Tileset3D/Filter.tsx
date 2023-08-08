@@ -3,7 +3,6 @@ import { IconButton, Typography, Box } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import Slider from "@mui/material/Slider";
-import map from "../../../../map";
 
 const Filter = ({ tileset }) => {
     const [open, setOpen] = useState(true);
@@ -51,6 +50,7 @@ const Filter = ({ tileset }) => {
 
                     <Slider aria-label="Volume" step={1} min={0} max={200}
                             value={height}
+                            valueLabelDisplay="auto"
                             onChange={(event: Event, newValue: number | number[]) => {
                                 changeHeight(newValue as number);
                             }}
@@ -60,6 +60,7 @@ const Filter = ({ tileset }) => {
                     </Typography>
                     <Slider aria-label="Volume" step={1} min={0} max={50}
                             value={floor}
+                            valueLabelDisplay="auto"
                             onChange={(event: Event, newValue: number | number[]) => {
                                 changeFloor(newValue as number);
                             }}

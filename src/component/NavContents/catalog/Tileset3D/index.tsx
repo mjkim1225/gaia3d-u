@@ -82,7 +82,11 @@ const Tileset3DCatalog = ({ data, removeData }) => {
                         <Button size="small" variant="outlined" disabled sx={{ width: '30%' }}>
                             데아터정보
                         </Button>
-                        <Button size="small" variant="contained" href="#outlined-buttons" onClick={remove3DTileset} sx={{ width: '10%' }}>
+                        <Button size="small"
+                                sx={{ width: '10%' }}
+                                variant="contained"
+                                href="#outlined-buttons"
+                                onClick={remove3DTileset} >
                             <DeleteForeverIcon />
                         </Button>
                     </div>

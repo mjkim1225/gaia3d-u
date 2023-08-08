@@ -1,16 +1,14 @@
 import * as Cesium from 'cesium';
 import config from "../config";
 
-export default class Cesium3DTileStyle {
-    public viewer: Cesium.Viewer | null;
-    public url: string;
+export default class Gaia3DTileset {
+    private viewer: Cesium.Viewer | null;
     private tilesetObj: Cesium.Cesium3DTileset | null = null;
-    public color: { conditions: string[][] };
-    public show: { conditions: string[][] };
+    private color: { conditions: string[][] };
+    private show: { conditions: string[][] };
 
     constructor(viewer: Cesium.Viewer | null, url: string) {
         this.viewer = viewer;
-        this.url = url
         this.color = {
             conditions: [["true", "color('lightgrey')"]],
         };
@@ -21,14 +19,13 @@ export default class Cesium3DTileStyle {
         Cesium.Cesium3DTileset.fromUrl(
             url
         ).then((tileset) => {
-            const index = this.viewer?.scene.primitives.length;
-            this.tilesetObj = tileset;
             tileset.customShader = new Cesium.CustomShader({
                 lightingModel: Cesium.LightingModel.UNLIT
             })
 
             tileset.style = this.getStyle();
-            this.viewer?.scene.primitives.add(tileset, index);
+            this.viewer?.scene.primitives.add(tileset);
+            this.tilesetObj = tileset;
         })
     }
 
