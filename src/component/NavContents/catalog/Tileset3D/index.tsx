@@ -27,17 +27,15 @@ import Coloring from "./Coloring";
 const Tileset3DCatalog = ({ data, removeData }) => {
     const [subMenu, setSubMenu] = useState(false);
     const [show, setShow] = useState(true);
-    const [dataIndex, setDataIndex] = useState(0);
+
+    // @ts-ignore
+    const [tileset, setTileset] = useState<map.Gaia3DTileset | null>(null);
 
     useEffect(() => {
-        map.add3DTilesetAndGetIndex(data.url).then(
-            (index) => {
-                if (index !== undefined) {
-                    setDataIndex(index);
-                    map.setCameraView(data.cameraOption);
-                }
-            }
-        );
+        const viewer = map.getViewer();
+        const _tileset = new map.Gaia3DTileset(viewer, data.url);
+        setTileset(_tileset);
+        zoom();
     }, []);
 
     const zoom = () => {
@@ -45,12 +43,12 @@ const Tileset3DCatalog = ({ data, removeData }) => {
     }
 
     const showData = () => {
+        tileset.toggle();
         setShow(!show);
-        map.toggle3DTileset(dataIndex);
     }
 
     const remove3DTileset = () => {
-        map.remove3DTileset(dataIndex);
+        tileset.remove();
         removeData(data);
     }
 
@@ -88,11 +86,11 @@ const Tileset3DCatalog = ({ data, removeData }) => {
                             <DeleteForeverIcon />
                         </Button>
                     </div>
-                    <Filter dataIndex={dataIndex} />
-                    <Transparency dataIndex={dataIndex} />
-                    <Shadow dataIndex={dataIndex}/>
-                    <Clipping dataIndex={dataIndex}/>
-                    <Coloring dataIndex={dataIndex}/>
+                    <Filter tileset={tileset} />
+                    <Transparency tileset={tileset} />
+                    <Shadow tileset={tileset}/>
+                    <Clipping tileset={tileset}/>
+                    <Coloring tileset={tileset}/>
                 </Box>
             </Stack>
         </>

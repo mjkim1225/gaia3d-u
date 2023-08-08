@@ -4,7 +4,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
 
-const Coloring = ({ dataIndex }) => {
+const Coloring = ({ tileset }) => {
     const [open, setOpen] = useState(true);
 
     const toggleContent = () => {

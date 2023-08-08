@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {IconButton, Typography, Box, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent} from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import map from "../../../../map";
 import mapConfig from "../../../../map/config";
 
 const shadowMode = mapConfig.SHADOW_MODE;
@@ -14,7 +13,7 @@ const SHADOW_MODE_OPTIONS: { label: string; value: ShadowModeType }[] = [
     { label: 'Cast Only', value: 'CAST_ONLY' },
     { label: 'Receive Only', value: 'RECEIVE_ONLY' },
 ];
-const Shadow = ({ dataIndex }) => {
+const Shadow = ({ tileset }) => {
     const [open, setOpen] = useState(true);
 
     const toggleContent = () => {
@@ -25,7 +24,7 @@ const Shadow = ({ dataIndex }) => {
     const handleModeChange = (event: SelectChangeEvent<ShadowModeType>) => {
         const mode = event.target.value as ShadowModeType;
         setSelectedMode(mode);
-        map.set3DTilesetShadowMode(dataIndex, mode);
+        tileset.setShadowMode(mode);
     };
 
     return (

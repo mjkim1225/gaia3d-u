@@ -31,8 +31,6 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
     },
 }));
 
-// ----------------------------------------------------------------------
-
 Header.propTypes = {
     onOpenNav: PropTypes.func,
 };

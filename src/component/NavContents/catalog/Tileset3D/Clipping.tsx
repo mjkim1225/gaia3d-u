@@ -2,11 +2,10 @@ import React, {useEffect, useState} from 'react';
 import {IconButton, Typography, Box} from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import map from "../../../../map";
 import Switch from "@mui/joy/Switch";
 
 
-const Clipping = ({ dataIndex }) => {
+const Clipping = ({ tileset }) => {
     const [open, setOpen] = useState(true);
 
     const toggleContent = () => {
@@ -16,7 +15,7 @@ const Clipping = ({ dataIndex }) => {
     const [clipping, setClipping] = React.useState<boolean>(false);
 
     useEffect(() => {
-        if(clipping) map.createClippingPlane(dataIndex);
+        if(clipping) console.log("준비중~")
     }, [clipping]);
 
     return (

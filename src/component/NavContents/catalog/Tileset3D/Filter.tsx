@@ -5,7 +5,7 @@ import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import Slider from "@mui/material/Slider";
 import map from "../../../../map";
 
-const Filter = ({ dataIndex }) => {
+const Filter = ({ tileset }) => {
     const [open, setOpen] = useState(true);
 
     const toggleContent = () => {
@@ -15,12 +15,12 @@ const Filter = ({ dataIndex }) => {
     const [height, setHeight] = useState(200);
     const changeHeight = (value) => {
         setHeight(value)
-        map.set3DTilesetHeight(dataIndex, value)
+        tileset.addStyleShow("BLDH_HGT", "${BLDH_HGT} < "+ height);
     }
     const [floor, setFloor] = useState(50);
     const changeFloor = (value) => {
         setFloor(value)
-        map.set3DTilesetFloor(dataIndex, value)
+        tileset.addStyleShow("BFLR_CO", "${BFLR_CO} < "+ floor);
     }
 
     return (

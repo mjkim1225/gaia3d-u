@@ -5,7 +5,7 @@ import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import Slider from "@mui/material/Slider";
 import map from "../../../../map";
 
-const Transparency = ({ dataIndex }) => {
+const Transparency = ({ tileset }) => {
     const [open, setOpen] = useState(true);
 
     const toggleContent = () => {
@@ -16,7 +16,7 @@ const Transparency = ({ dataIndex }) => {
 
     const changeTransparency = (value) => {
         setTransparency(value)
-        map.set3DTilesetTransparency(dataIndex, value)
+        tileset.setTransparency(value);
     };
 
     return (

@@ -3,6 +3,8 @@ import * as Cesium from 'cesium';
 import {CameraOption} from "./types";
 import config from './config';
 
+import Gaia3DTileset from "./3Dtileset/Gaia3DTileset";
+
 type Viewer = Cesium.Viewer;
 
 let viewer: Viewer | null = null;
@@ -22,55 +24,6 @@ const setCameraView = (params: CameraOption) => {
     });
 };
 
-const add3DTilesetAndGetIndex = async (url: string): Promise< number | undefined> => {
-    if(viewer) {
-        const index = viewer.scene.primitives.length;
-        try {
-            const tileset = await Cesium.Cesium3DTileset.fromUrl(
-                url
-            );
-            tileset.customShader = new Cesium.CustomShader({
-                lightingModel: Cesium.LightingModel.UNLIT
-            })
-
-            tileset.style = config.Cesium3DTileStyle.get();
-
-            viewer.scene.primitives.add(tileset, index);
-            return index;
-        } catch (error) {
-            console.error(`Error creating tileset: ${error}`);
-        }
-    }
-}
-
-const remove3DTileset = (index: number) => {
-    const tilesetObj = viewer?.scene.primitives.get(index);
-    if(tilesetObj) {
-        viewer?.scene.primitives.remove(tilesetObj);
-    }
-}
-
-const toggle3DTileset = (index: number) => {
-    if(viewer) {
-        const tilesetObj = viewer.scene.primitives.get(index);
-        tilesetObj.show = !tilesetObj.show;
-    }
-}
-
-const set3DTilesetTransparency = (index: number, transparency: number) => {
-    const tilesetObj = viewer?.scene.primitives.get(index);
-    if(tilesetObj) {
-        config.Cesium3DTileStyle.setColor(`color('lightgrey', ${transparency})`);
-        tilesetObj.style = config.Cesium3DTileStyle.get();
-    }
-}
-
-const set3DTilesetShadowMode = (index: number, mode: keyof typeof config.SHADOW_MODE) => {
-    const tilesetObj = viewer?.scene.primitives.get(index);
-    if(tilesetObj) {
-        tilesetObj.shadows = config.SHADOW_MODE[mode];
-    }
-}
 
 const addGeoJsonData = (name, file, color) => {
     Cesium.GeoJsonDataSource.load(file, {
@@ -229,36 +182,16 @@ const createClippingPlane = (index) => {
     }
 };
 
-const set3DTilesetHeight = (index, height) => {
-    if (viewer) {
-        const tilesetObj = viewer.scene.primitives.get(index);
-        config.Cesium3DTileStyle.addShow("BLDH_HGT", "${BLDH_HGT} < "+ height);
-        tilesetObj.style = config.Cesium3DTileStyle.get();
-    }
-}
-
-const set3DTilesetFloor = (index, floor) => {
-    if (viewer) {
-        const tilesetObj = viewer.scene.primitives.get(index);
-        config.Cesium3DTileStyle.addShow("BFLR_CO", "${BFLR_CO} < "+ floor);
-        tilesetObj.style = config.Cesium3DTileStyle.get();
-    }
-}
-
 export default {
     viewer,
     getViewer: (): Viewer | null => viewer,
     setCameraView,
-    add3DTilesetAndGetIndex,
-    remove3DTileset,
-    toggle3DTileset,
-    set3DTilesetTransparency,
-    set3DTilesetShadowMode,
+
+    Gaia3DTileset,
+
     addGeoJsonData,
     toggleGeoJsonData,
     createClippingPlane,
-    set3DTilesetHeight,
-    set3DTilesetFloor,
     initMap: async (mapId: string) => {
         Cesium.Ion.defaultAccessToken = config.ACCESS_TOKEN;
 
