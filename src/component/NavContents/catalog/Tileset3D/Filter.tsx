@@ -32,7 +32,7 @@ const Filter = ({ tileset }) => {
                     borderBottom: '1px solid grey',
                 }}
             >
-                <Typography variant="body1" sx={{ textAlign: 'left' }}> 필터(건축물)</Typography>
+                <Typography variant="body1" sx={{ textAlign: 'left', pl: '10px'}}> 필터(건축물)</Typography>
                 <IconButton onClick={toggleContent} sx={{ position: 'absolute', right: 0 }}>
                     {open ? <KeyboardArrowDownIcon /> : <KeyboardArrowLeftIcon />}
                 </IconButton>

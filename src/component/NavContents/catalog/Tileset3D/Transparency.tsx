@@ -28,7 +28,7 @@ const Transparency = ({ tileset }) => {
                     borderBottom: '1px solid grey',
                 }}
             >
-                <Typography variant="body1" sx={{ textAlign: 'left' }}> 투명도 </Typography>
+                <Typography variant="body1" sx={{ textAlign: 'left', pl: '10px'}}> 투명도 </Typography>
                 <IconButton onClick={toggleContent} sx={{ position: 'absolute', right: 0 }}>
                     {open ? <KeyboardArrowDownIcon /> : <KeyboardArrowLeftIcon />}
                 </IconButton>

@@ -43,11 +43,16 @@ const LineCatalog = ({ data }) => {
     // 이유: 데이터를 실제로 list에서 remove 하면 컴포넌트를 다시생성하는데, 그때 Gaia** 객체들도 다시 생성된다.. 따라서 기능이 제대로 수행이 안됨
     const [isVisible, setIsVisible] = useState(true);
 
+    const [legendList, setLegendList] = useState<{id:number, title:string, color:string}[]>([]);
 
     useEffect(() => {
         const viewer = map.getViewer();
         const _line = new map.GaiaGeoJsonDataSource(viewer, data.dataList);
         setLine(_line);
+
+        data.dataList.map((item, index) => {
+            setLegendList(prevState => [...prevState, {id:index, title:item.nameKor, color:item.color}]);
+        });
 
         zoom();
     }, []);
@@ -109,7 +114,7 @@ const LineCatalog = ({ data }) => {
                                     <DeleteForeverIcon />
                                 </Button>
                             </div>
-                            <Legend dataList={data.dataList} />
+                            <Legend dataList={legendList} />
                         </Box>
                     </Stack>
                 </Item>

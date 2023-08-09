@@ -37,7 +37,7 @@ const Shadow = ({ tileset }) => {
                     borderBottom: '1px solid grey',
                 }}
             >
-                <Typography variant="body1" sx={{ textAlign: 'left' }}> 그림자 </Typography>
+                <Typography variant="body1" sx={{ textAlign: 'left', pl: '10px'}}> 그림자 </Typography>
                 <IconButton onClick={toggleContent} sx={{ position: 'absolute', right: 0 }}>
                     {open ? <KeyboardArrowDownIcon /> : <KeyboardArrowLeftIcon />}
                 </IconButton>

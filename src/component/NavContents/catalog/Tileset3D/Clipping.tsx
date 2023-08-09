@@ -28,7 +28,7 @@ const Clipping = ({ tileset }) => {
                     borderBottom: '1px solid grey',
                 }}
             >
-                <Typography variant="body1" sx={{ textAlign: 'left' }}> 클리핑 </Typography>
+                <Typography variant="body1" sx={{ textAlign: 'left', pl: '10px'}}> 클리핑 </Typography>
                 <IconButton onClick={toggleContent} sx={{ position: 'absolute', right: 0 }}>
                     {open ? <KeyboardArrowDownIcon /> : <KeyboardArrowLeftIcon />}
                 </IconButton>

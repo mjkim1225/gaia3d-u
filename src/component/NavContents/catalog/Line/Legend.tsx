@@ -6,6 +6,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import List from "@mui/material/List";
 import {styled} from "@mui/material/styles";
+import PropTypes from "prop-types";
 
 const LegendColor = styled('div')(({color}) => ({
     backgroundColor: color,
@@ -31,7 +32,7 @@ const Legend = ({dataList}) => {
                     borderBottom: '1px solid grey',
                 }}
             >
-                <Typography variant="body1" sx={{ textAlign: 'left' }}> 범례 </Typography>
+                <Typography variant="body1" sx={{ textAlign: 'left', pl: '10px'}}> 범례 </Typography>
                 <IconButton onClick={toggleContent} sx={{ position: 'absolute', right: 0 }}>
                     {open ? <KeyboardArrowDownIcon /> : <KeyboardArrowLeftIcon />}
                 </IconButton>
@@ -50,7 +51,7 @@ const Legend = ({dataList}) => {
                                     <ListItem key={d.id} dense={true}>
                                         <LegendColor color={d.color}/>
                                         <ListItemText
-                                            primary={d.nameKor}
+                                            primary={d.title}
                                         />
                                     </ListItem>
                                 )
@@ -64,3 +65,11 @@ const Legend = ({dataList}) => {
 };
 
 export default Legend;
+
+Legend.propTypes = {
+    dataList: PropTypes.arrayOf(PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        title: PropTypes.string.isRequired,
+        color: PropTypes.string.isRequired
+    })).isRequired
+};
