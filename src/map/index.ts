@@ -50,7 +50,6 @@ export default {
             showRenderLoopErrors: false,
         });
 
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         viewer.bottomContainer.style.visibility = 'hidden';
 

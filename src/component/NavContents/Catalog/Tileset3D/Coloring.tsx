@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { RadioGroup, FormControlLabel, Radio } from '@mui/material';
 import ConditionTemplate from '../common/ConditionTemplate';
 
-const Coloring = () => {
+const Coloring = ({ tileset }) => {
     const [open, setOpen] = useState(true);
     const [selectedOption, setSelectedOption] = useState('noColor');
 

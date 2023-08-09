@@ -4,7 +4,7 @@ import Switch from "@mui/joy/Switch";
 import {Typography} from "@mui/material";
 import ConditionTemplate from "../common/ConditionTemplate";
 
-const Clipping = () => {
+const Clipping = ({ tileset }) => {
     const [open, setOpen] = useState(true);
     const [clipping, setClipping] = React.useState<boolean>(false);
 

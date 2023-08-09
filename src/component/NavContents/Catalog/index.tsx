@@ -2,8 +2,9 @@ import React, {useState} from 'react';
 import {Button, Stack} from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
-import CatalogContent from "./catalog/CatalogContent";
-import CatalogSearch from "./catalog/CatalogSearch";
+import CatalogSearch from "./CatalogSearch";
+import Tileset3DCatalog from "./Tileset3D";
+import LineCatalog from "./Line";
 
 const Catalog = () => {
 
@@ -11,7 +12,6 @@ const Catalog = () => {
 
     const [dataList, setDataList] = useState([]);
     const addNewData = (newData) => {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         setDataList((prevList) => [...prevList, newData]);
     };
@@ -26,7 +26,15 @@ const Catalog = () => {
                 SEARCH CATALOG
             </Button>
         </Stack>
-            <CatalogContent dataList={dataList} />
+            {
+                dataList.map((data) =>  {
+                    return data.type === '3DTileset' ? (
+                        <Tileset3DCatalog key={dataList.indexOf(data)} data={data} />
+                    ) : data.type === 'line' ? (
+                        <LineCatalog key={dataList.indexOf(data)} data={data} />
+                    ) : null
+                })
+            }
             <CatalogSearch open={openSearch}
                            close={() => setOpenSearch(false)}
                            addNewData={(data) => addNewData(data)}

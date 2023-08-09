@@ -24,7 +24,7 @@ const SHADOW_MODE = {
 }
 
 const CLIPPING_OPTIONS = {
-    BOX_SIZE: 700,
+    BOX_SIZE: 50,
     DIRECTIONS: {
         TOP: 0,
         BOTTOM: 1,
