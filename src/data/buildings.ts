@@ -151,7 +151,7 @@ const buildings = [
         cityKor: "서울시",
         cityEng: "su",
         tileset: "su_tileset",
-        url: "http://192.168.10.3:8002/static/tile/tileset_all/su_tileset/tileset.json",
+        url: `${ASSET_SERVER}/static/tile/tileset_all/su_tileset/tileset.json`,
         cameraOption: {
             longitude: 126.9780,
             latitude: 37.5665,
@@ -169,7 +169,7 @@ const buildings = [
         cityKor: "제주시",
         cityEng: "jj",
         tileset: "jj_tileset",
-        url: "http://192.168.10.3:8002/static/tile/tileset_all/jj_tileset/tileset.json",
+        url: `${ASSET_SERVER}/static/tile/tileset_all/jj_tileset/tileset.json`,
         cameraOption: {
             longitude: 126.5219,
             latitude: 33.4796,
@@ -187,7 +187,7 @@ const buildings = [
         cityKor: "세종시",
         cityEng: "sj",
         tileset: "sj_tileset",
-        url: "http://192.168.10.3:8002/static/tile/tileset_all/sj_tileset/tileset.json",
+        url: `${ASSET_SERVER}/static/tile/tileset_all/sj_tileset/tileset.json`,
         cameraOption: {
             longitude: 127.2517,
             latitude: 36.5001,
@@ -205,7 +205,7 @@ const buildings = [
         tileset: "bs_tileset",
         cityKor: "부산시",
         cityEng: "bs",
-        url: "http://192.168.10.3:8002/static/tile/tileset_all/bs_tileset/tileset.json",
+        url: `${ASSET_SERVER}/static/tile/tileset_all/bs_tileset/tileset.json`,
         cameraOption: {
             longitude: 129.0756,
             latitude: 35.1796,
@@ -223,7 +223,7 @@ const buildings = [
         cityKor: "인천시",
         cityEng: "ic",
         tileset: "ic_tileset",
-        url: "http://192.168.10.3:8002/static/tile/tileset_all/ic_tileset/tileset.json",
+        url: `${ASSET_SERVER}/static/tile/tileset_all/ic_tileset/tileset.json`,
         cameraOption: {
             longitude: 126.7052,
             latitude: 37.4563,
@@ -241,7 +241,7 @@ const buildings = [
         cityKor: "대전시",
         cityEng: "dj",
         tileset: "dj_tileset",
-        url: "http://192.168.10.3:8002/static/tile/tileset_all/dj_tileset/tileset.json",
+        url: `${ASSET_SERVER}/static/tile/tileset_all/dj_tileset/tileset.json`,
         cameraOption: {
             longitude: 127.3845,
             latitude: 36.3504,
@@ -259,7 +259,7 @@ const buildings = [
         cityKor: "대구시",
         cityEng: "dg",
         tileset: "dg_tileset",
-        url: "http://192.168.10.3:8002/static/tile/tileset_all/dg_tileset/tileset.json",
+        url: `${ASSET_SERVER}/static/tile/tileset_all/dg_tileset/tileset.json`,
         cameraOption: {
             longitude: 128.6014,
             latitude: 35.8714,
@@ -268,7 +268,151 @@ const buildings = [
             pitch: -40,
             roll: 0
         }
-    }
+    },
+    {
+        id: 7,
+        type: "3DTileset",
+        nameKor: "울산시 3D 빌딩",
+        nameEng: "ulsan 3d buildings",
+        cityKor: "울산시",
+        cityEng: "us",
+        tileset: "us_tileset",
+        url: `${ASSET_SERVER}/static/tile/tileset_all/us_tileset/tileset.json`,
+        cameraOption: {
+            longitude: 129.3114,
+            latitude: 35.5384,
+            altitude: 1500,
+            heading: 0,
+            pitch: -40,
+            roll: 0
+        }
+    },
+    {
+        id: 8,
+        type: "3DTileset",
+        nameKor: "광주시 3D 빌딩",
+        nameEng: "gwangju 3d buildings",
+        cityKor: "광주시",
+        cityEng: "gj",
+        tileset: "gj_tileset",
+        url: `${ASSET_SERVER}/static/tile/tileset_all/gj_tileset/tileset.json`,
+        cameraOption: {
+            longitude: 126.8514,
+            latitude: 35.1606,
+            altitude: 1500,
+            heading: 0,
+            pitch: -40,
+            roll: 0
+        }
+    },
+    {
+        id: 9,
+        type: "3DTileset",
+        nameKor: "강원도 3D 빌딩",
+        nameEng: "gangwon 3d buildings",
+        cityKor: "강원도",
+        cityEng: "gw",
+        tileset: "gw_tileset",
+        url: `${ASSET_SERVER}/static/tile/tileset_all/gw_tileset/tileset.json`,
+        cameraOption: {
+            longitude: 128.2052,
+            latitude: 37.5556,
+            altitude: 1500,
+            heading: 0,
+            pitch: -40,
+            roll: 0
+        }
+    },
+    {
+        id: 10,
+        type: "3DTileset",
+        nameKor: "충청북도 3D 빌딩",
+        nameEng: "chungbuk 3d buildings",
+        cityKor: "충청북도",
+        cityEng: "cb",
+        tileset: "cb_tileset",
+        url: `${ASSET_SERVER}/static/tile/tileset_all/cb_tileset/tileset.json`,
+        cameraOption: {
+            longitude: 127.8174,
+            latitude: 36.8006,
+            altitude: 1500,
+            heading: 0,
+            pitch: -40,
+            roll: 0
+        }
+    },
+    {
+        id: 11,
+        type: "3DTileset",
+        nameKor: "충청남도 3D 빌딩",
+        nameEng: "chungnam 3d buildings",
+        cityKor: "충청남도",
+        cityEng: "cn",
+        tileset: "cn_tileset",
+        url: `${ASSET_SERVER}/static/tile/tileset_all/cn_tileset/tileset.json`,
+        cameraOption: {
+            longitude: 126.7174,
+            latitude: 36.3006,
+            altitude: 1500,
+            heading: 0,
+            pitch: -40,
+            roll: 0
+        }
+    },
+    {
+        id: 12,
+        type: "3DTileset",
+        nameKor: "전라북도 3D 빌딩",
+        nameEng: "jeonbuk 3d buildings",
+        cityKor: "전라북도",
+        cityEng: "jb",
+        tileset: "jb_tileset",
+        url: `${ASSET_SERVER}/static/tile/tileset_all/jb_tileset/tileset.json`,
+        cameraOption: {
+            longitude: 126.7174,
+            latitude: 35.5006,
+            altitude: 1500,
+            heading: 0,
+            pitch: -40,
+            roll: 0
+        }
+    },
+    {
+        id: 13,
+        type: "3DTileset",
+        nameKor: "전라남도 3D 빌딩",
+        nameEng: "jeonnam 3d buildings",
+        cityKor: "전라남도",
+        cityEng: "jn",
+        tileset: "jn_tileset",
+        url: `${ASSET_SERVER}/static/tile/tileset_all/jn_tileset/tileset.json`,
+        cameraOption: {
+            longitude: 126.7174,
+            latitude: 35.3006,
+            altitude: 1500,
+            heading: 0,
+            pitch: -40,
+            roll: 0
+        }
+    },
+    {
+        id: 14,
+        type: "3DTileset",
+        nameKor: "경상북도 3D 빌딩",
+        nameEng: "gyeongbuk 3d buildings",
+        cityKor: "경상북도",
+        cityEng: "gb",
+        tileset: "gb_tileset",
+        url: `${ASSET_SERVER}/static/tile/tileset_all/gb_tileset/tileset.json`,
+        cameraOption: {
+            longitude: 128.7174,
+            latitude: 36.8006,
+            altitude: 1500,
+            heading: 0,
+            pitch: -40,
+            roll: 0
+        }
+    },
 ]
 
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -19,7 +19,15 @@ const CatalogSearch = ({ open, close, addNewData }) => {
     const addData = (data) => {
         addNewData(data);
         close();
+        dataList.find(item => item.id === data.id && item.type === data.type).usage = true;
     };
+
+    const [dataList, setDataList] = useState<any[]>([]);
+
+    useEffect(() => {
+        const _dataList = wholeDataList.map(data => ({ ...data, usage: false }));
+        setDataList(_dataList);
+    }, []);
 
     return (
         <div>
@@ -28,7 +36,7 @@ const CatalogSearch = ({ open, close, addNewData }) => {
                 onClose={close}
                 maxWidth="sm"
                 fullWidth
-                sx={{ "& .MuiDialog-paper": { width: 500 }, "& .MuiDialogContent-root": { maxHeight: 500 } }} // 스타일 설정
+                sx={{ "& .MuiDialog-paper": { width: 400 }, "& .MuiDialogContent-root": { maxHeight: 500 } }} // 스타일 설정
                 BackdropProps={{ invisible: true }}
             >
                 <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}> {/* 수정 */}
@@ -40,16 +48,21 @@ const CatalogSearch = ({ open, close, addNewData }) => {
                 <DialogContent dividers>
                     <List style={{ maxHeight: 300, overflow: 'auto' }}>
                         {
-                            wholeDataList.map((data, index) => (
-                                <ListItem key={index}>
-                                    <ListItemText primary={data.nameKor} />
-                                    <ListItemSecondaryAction>
-                                        <IconButton edge="end" aria-label="add" onClick={() => addData(data)}>
-                                            <AddIcon />
-                                        </IconButton>
-                                    </ListItemSecondaryAction>
-                                </ListItem>
-                            ))
+                            dataList.map((data, index) =>
+                                 (
+                                    <ListItem key={index}>
+                                        <ListItemText primary={data.nameKor} />
+                                        <ListItemSecondaryAction>
+                                            <IconButton
+                                                edge="end"
+                                                aria-label="add"
+                                                disabled={data.usage}
+                                                onClick={() => addData(data)}>
+                                                <AddIcon />
+                                            </IconButton>
+                                        </ListItemSecondaryAction>
+                                    </ListItem>
+                                ))
                         }
                     </List>
                 </DialogContent>
