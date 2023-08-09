@@ -25,17 +25,15 @@ const CatalogContent = ({ dataList, setDataList }) => {
 
     return (
         <>
-            {dataList.map((data) => (
-                <Box key={dataList.indexOf(data)} sx={{ flexGrow: 1, overflow: 'hidden', px: 1 }}>
-                    <Item sx={{ my: 1, mx: 'auto', p: 1 }}>
-                        {data.type === '3DTileset' ? (
-                            <Tileset3DCatalog data={data} removeData={() => removeData(data) }/>
-                        ) : data.type === 'line' ? (
-                            <LineCatalog data={data} removeData={() => removeData(data) }/>
-                        ) : null}
-                    </Item>
-                </Box>
-            ))}
+             {
+                dataList.map((data) =>  {
+                    return data.type === '3DTileset' ? (
+                        <Tileset3DCatalog key={dataList.indexOf(data)} data={data} />
+                    ) : data.type === 'line' ? (
+                        <LineCatalog key={dataList.indexOf(data)} data={data} />
+                    ) : null
+                })
+             }
         </>
     );
 };
