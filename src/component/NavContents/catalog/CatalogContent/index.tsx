@@ -17,11 +17,7 @@ const Item = styled(Paper)(({theme}) => ({
     maxWidth: 400,
 }));
 
-const CatalogContent = ({ dataList, setDataList }) => {
-
-    const removeData = (data) => {
-        setDataList((prevList) => prevList.filter((d) => d !== data));
-    }
+const CatalogContent = ({ dataList }) => {
 
     return (
         <>

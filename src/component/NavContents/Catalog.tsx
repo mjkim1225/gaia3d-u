@@ -26,7 +26,7 @@ const Catalog = () => {
                 SEARCH CATALOG
             </Button>
         </Stack>
-            <CatalogContent dataList={dataList} setDataList={setDataList}/>
+            <CatalogContent dataList={dataList} />
             <CatalogSearch open={openSearch}
                            close={() => setOpenSearch(false)}
                            addNewData={(data) => addNewData(data)}
