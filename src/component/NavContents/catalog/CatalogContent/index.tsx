@@ -1,21 +1,7 @@
 import * as React from 'react';
 
-import Box from '@mui/material/Box';
-
-import {styled} from "@mui/material/styles";
-import Paper from "@mui/material/Paper";
-
 import Tileset3DCatalog from "../Tileset3D";
 import LineCatalog from "../Line";
-
-const Item = styled(Paper)(({theme}) => ({
-    backgroundColor: '#F5F5F5',
-    ...theme.typography.body2,
-    padding: "1px",
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-    maxWidth: 400,
-}));
 
 const CatalogContent = ({ dataList }) => {
 

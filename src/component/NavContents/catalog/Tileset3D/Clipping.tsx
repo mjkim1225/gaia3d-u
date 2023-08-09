@@ -1,53 +1,26 @@
-import React, {useEffect, useState} from 'react';
-import {IconButton, Typography, Box} from '@mui/material';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+// Clipping.js
+import React, { useEffect, useState } from 'react';
 import Switch from "@mui/joy/Switch";
+import {Typography} from "@mui/material";
+import ConditionTemplate from "../common/ConditionTemplate";
 
-
-const Clipping = ({ tileset }) => {
+const Clipping = () => {
     const [open, setOpen] = useState(true);
+    const [clipping, setClipping] = React.useState<boolean>(false);
 
     const toggleContent = () => {
         setOpen(!open);
     };
 
-    const [clipping, setClipping] = React.useState<boolean>(false);
-
     useEffect(() => {
-        if(clipping) console.log("준비중~")
+        if (clipping) console.log("준비중~");
     }, [clipping]);
 
     return (
-        <Box sx={{ backgroundColor: 'white' ,border: '1px solid grey', margin: '5px', borderRadius: '5px', position: 'relative' }}>
-            <Box
-                sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    padding: '10px',
-                    borderBottom: '1px solid grey',
-                }}
-            >
-                <Typography variant="body1" sx={{ textAlign: 'left', pl: '10px'}}> 클리핑 </Typography>
-                <IconButton onClick={toggleContent} sx={{ position: 'absolute', right: 0 }}>
-                    {open ? <KeyboardArrowDownIcon /> : <KeyboardArrowLeftIcon />}
-                </IconButton>
-            </Box>
-            {open && (
-                <Box
-                    sx={{
-                        borderTop: 'none',
-                        padding: '10px',
-                    }}
-                >
-                    <Typography variant="body1" > 활성화 </Typography>
-                    <Switch
-                        checked={clipping}
-                        onChange={(event) => setClipping(event.target.checked)}
-                    />
-                </Box>
-            )}
-        </Box>
+        <ConditionTemplate title="클리핑" open={open} toggleContent={toggleContent}>
+            <Typography variant="body1"> 활성화 </Typography>
+            <Switch checked={clipping} onChange={(event) => setClipping(event.target.checked)} />
+        </ConditionTemplate>
     );
 };
 

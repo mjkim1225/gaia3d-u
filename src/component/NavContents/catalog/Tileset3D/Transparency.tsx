@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { IconButton, Typography, Box } from '@mui/material';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import Slider from "@mui/material/Slider";
+import ConditionTemplate from '../common/ConditionTemplate';
 
 const Transparency = ({ tileset }) => {
     const [open, setOpen] = useState(true);
@@ -19,37 +17,15 @@ const Transparency = ({ tileset }) => {
     };
 
     return (
-        <Box sx={{ backgroundColor: 'white' ,border: '1px solid grey', margin: '5px', borderRadius: '5px', position: 'relative' }}>
-            <Box
-                sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    padding: '10px',
-                    borderBottom: '1px solid grey',
-                }}
-            >
-                <Typography variant="body1" sx={{ textAlign: 'left', pl: '10px'}}> 투명도 </Typography>
-                <IconButton onClick={toggleContent} sx={{ position: 'absolute', right: 0 }}>
-                    {open ? <KeyboardArrowDownIcon /> : <KeyboardArrowLeftIcon />}
-                </IconButton>
-            </Box>
-            {open && (
-                <Box
-                    sx={{
-                        borderTop: 'none',
-                        padding: '10px',
+        <ConditionTemplate title="투명도" open={open} toggleContent={toggleContent}>
+            <Slider aria-label="Volume" step={0.1} marks min={0} max={1}
+                    value={transparency}
+                    valueLabelDisplay="auto"
+                    onChange={(event, newValue) => {
+                        changeTransparency(newValue);
                     }}
-                >
-                    <Slider aria-label="Volume" step={0.1} marks min={0} max={1}
-                            value={transparency}
-                            valueLabelDisplay="auto"
-                            onChange={(event: Event, newValue: number | number[]) => {
-                                changeTransparency(newValue as number);
-                            }}
-                    />
-                </Box>
-            )}
-        </Box>
+            />
+        </ConditionTemplate>
     );
 };
 
