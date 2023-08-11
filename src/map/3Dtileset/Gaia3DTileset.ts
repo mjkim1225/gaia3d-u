@@ -2,7 +2,7 @@ import * as Cesium from 'cesium';
 import config from "../config";
 
 export default class Gaia3DTileset {
-    private viewer: Cesium.Viewer | null;
+    private readonly viewer: Cesium.Viewer | null;
     private tilesetObj: Cesium.Cesium3DTileset | null = null;
     private color: { conditions: string[][] };
     private show: { conditions: string[][] };

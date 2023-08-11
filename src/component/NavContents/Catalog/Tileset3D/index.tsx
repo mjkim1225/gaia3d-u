@@ -33,26 +33,14 @@ const Item = styled(Paper)(({theme}) => ({
     maxWidth: 400,
 }));
 
-const Tileset3DCatalog = ({ data, removeCatalogId }) => {
+const Tileset3DCatalog = ({ data, removeCatalogId, tileset }) => {
     const [subMenu, setSubMenu] = useState(false);
     const [show, setShow] = useState(true);
 
-    // @ts-ignore
-    const [tileset, setTileset] = useState<map.Gaia3DTileset | null>(null);
-
-    // 실제 데이터를 remove 하지않고, 컴포넌트만 지운다
-    // 이유: 데이터를 실제로 list에서 remove 하면 컴포넌트를 다시생성하는데, 그때 Gaia** 객체들도 다시 생성된다.. 따라서 기능이 제대로 수행이 안됨
-    const [isVisible, setIsVisible] = useState(true);
-
     useEffect(() => {
-        const viewer = map.getViewer();
-        const _tileset = new map.Gaia3DTileset(viewer, data.url);
-        setTileset(_tileset);
+
         zoom();
 
-        return () => {
-            setTileset(null);
-        }
     }, []);
 
     const zoom = () => {
@@ -66,12 +54,7 @@ const Tileset3DCatalog = ({ data, removeCatalogId }) => {
 
     const remove3DTileset = () => {
         tileset.remove();
-        setIsVisible(false);
         removeCatalogId();
-    }
-
-    if (!isVisible) {
-        return null; // isVisible이 false일 때는 컴포넌트를 렌더링하지 않음
     }
 
     return (

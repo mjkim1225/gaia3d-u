@@ -13,12 +13,12 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
 import wholeDataList from '../../../../data/data';
-import useCatalogListStore from "../../../../store/useCatalogListStore";
 import { UsageCatalogType } from "../../../../types";
+import useGaiaObjListStore from "../../../../store/useGaiaObjListStore";
 
 const CatalogSearch = ({ open, close, addNewData }) => {
 
-    const {catalogIdList, addCatalogId} = useCatalogListStore();
+    const {gaiaObjIdList} = useGaiaObjListStore();
 
     const [dataList, setDataList] = useState<UsageCatalogType[]>([]);
 
@@ -31,7 +31,7 @@ const CatalogSearch = ({ open, close, addNewData }) => {
         const dLength = dataList.length;
         if(dLength > 0 ) {
             const _dataList = dataList.map(data => {
-                if(catalogIdList.indexOf(data.id) > -1) {
+                if(gaiaObjIdList.indexOf(data.id) > -1) {
                     data.usage = true;
                 }else {
                     data.usage = false;
@@ -40,15 +40,15 @@ const CatalogSearch = ({ open, close, addNewData }) => {
             })
             setDataList(_dataList);
         }
-    }, [catalogIdList])
+    }, [gaiaObjIdList])
 
     const addData = (data) => {
         addNewData(data);
-        addCatalogId(data.id);
+        setSelectedData(null);
         close();
     };
 
-    const [selectedData, setSelectedData] = useState<UsageCatalogType>(wholeDataList[0]);
+    const [selectedData, setSelectedData] = useState<UsageCatalogType | null>(null);
 
     const showDescription = (data) => {
         setSelectedData(data);

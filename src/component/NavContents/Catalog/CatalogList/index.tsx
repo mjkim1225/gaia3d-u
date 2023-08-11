@@ -1,30 +1,24 @@
 import React from 'react';
 
-import useCatalogListStore from "../../../../store/useCatalogListStore";
-
 import Tileset3DCatalog from "../Tileset3D";
 
-import LineCatalog from "../Line";
-import {CatalogType} from "../../../../types";
-
-const CatalogList = ({catalogList}) => {
-
-    const {removeCatalogId} = useCatalogListStore();
+const CatalogList = ({gaiaObjList, removeData}) => {
 
     const remove = (id) => {
-        removeCatalogId(id);
+        removeData(id);
     }
 
     return (
         <>
             {
-                catalogList.map((catalog: CatalogType) =>  {
-                    if(catalog) {
-                        const id = catalog.id;
+                gaiaObjList.map((gaiaObj) =>  {
+                    if(gaiaObj) {
+                        const id = gaiaObj.id;
+                        const catalog = gaiaObj.catalog;
                         return catalog.type === '3DTileset' ? (
-                            <Tileset3DCatalog key={id} data={catalog} removeCatalogId={()=>remove(id)}/>
+                            <Tileset3DCatalog key={id} data={catalog} tileset={gaiaObj.gaiaObj} removeCatalogId={()=>remove(id)}/>
                         ) : catalog.type === 'line' ? (
-                            <LineCatalog key={id} data={catalog} removeCatalogId={()=>remove(id)}/>
+                            <div>test</div>
                         ) : null
                     }
                 })

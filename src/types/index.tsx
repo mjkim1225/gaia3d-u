@@ -1,3 +1,6 @@
+import Gaia3DTileset from "../map/3Dtileset/Gaia3DTileset";
+import GaiaGeoJsonDataSource from "../map/GeoJson/GaiaGeoJsonDataSource";
+
 type CameraOption = {
     longitude: number,
     latitude: number,
@@ -35,6 +38,12 @@ export type LineType = {
         url: string
     }[],
 };
+
+export type GaiaObjType = {
+    id: number,
+    catalog: CatalogType,
+    gaiaObj: Gaia3DTileset | GaiaGeoJsonDataSource,
+}
 
 export type CatalogType = TilesetType | LineType | null;
 export type UsageCatalogType = CatalogType & {
