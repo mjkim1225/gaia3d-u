@@ -3,17 +3,18 @@ import {Button, Stack} from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 import CatalogSearch from "./CatalogSearch";
-import Tileset3DCatalog from "./Tileset3D";
-import LineCatalog from "./Line";
+
+import CatalogList from "./CatalogList";
+import {CatalogType} from "../../../types";
 
 const Catalog = () => {
 
     const [openSearch, setOpenSearch] = useState(false);
 
-    const [dataList, setDataList] = useState([]);
+    const [catalogList, setCatalogList] = useState<CatalogType[]>([]);
     const addNewData = (newData) => {
         // @ts-ignore
-        setDataList((prevList) => [...prevList, newData]);
+        setCatalogList((prevList) => [...prevList, newData]);
     };
 
     return (
@@ -26,15 +27,7 @@ const Catalog = () => {
                 SEARCH CATALOG
             </Button>
         </Stack>
-            {
-                dataList.map((data) =>  {
-                    return data.type === '3DTileset' ? (
-                        <Tileset3DCatalog key={dataList.indexOf(data)} data={data} />
-                    ) : data.type === 'line' ? (
-                        <LineCatalog key={dataList.indexOf(data)} data={data} />
-                    ) : null
-                })
-            }
+            <CatalogList catalogList={catalogList} />
             <CatalogSearch open={openSearch}
                            close={() => setOpenSearch(false)}
                            addNewData={(data) => addNewData(data)}

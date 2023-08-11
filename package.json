@@ -21,7 +21,8 @@
     "@mui/joy": "^5.0.0-alpha.74",
     "@mui/material": "^5.11.16",
     "cesium": "^1.103.0",
-    "vite-plugin-cesium": "^1.2.22"
+    "vite-plugin-cesium": "^1.2.22",
+    "zustand": "^4.3.8"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",

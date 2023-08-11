@@ -16,8 +16,6 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 import map from '../../../../map';
 
-import PropTypes from "prop-types";
-
 import Filter from "./Filter";
 import Transparency from "./Transparency";
 import Shadow from "./Shadow";
@@ -25,7 +23,6 @@ import Clipping from "./Clipping";
 import Coloring from "./Coloring";
 import {styled} from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
-
 
 const Item = styled(Paper)(({theme}) => ({
     backgroundColor: '#F5F5F5',
@@ -36,7 +33,7 @@ const Item = styled(Paper)(({theme}) => ({
     maxWidth: 400,
 }));
 
-const Tileset3DCatalog = ({ data }) => {
+const Tileset3DCatalog = ({ data, removeCatalogId }) => {
     const [subMenu, setSubMenu] = useState(false);
     const [show, setShow] = useState(true);
 
@@ -70,6 +67,7 @@ const Tileset3DCatalog = ({ data }) => {
     const remove3DTileset = () => {
         tileset.remove();
         setIsVisible(false);
+        removeCatalogId();
     }
 
     if (!isVisible) {
@@ -111,7 +109,6 @@ const Tileset3DCatalog = ({ data }) => {
                                 <Button size="small"
                                         sx={{ width: '10%' }}
                                         variant="contained"
-                                        href="#outlined-buttons"
                                         onClick={remove3DTileset} >
                                     <DeleteForeverIcon />
                                 </Button>
@@ -128,17 +125,5 @@ const Tileset3DCatalog = ({ data }) => {
         </>
     );
 }
-
-Tileset3DCatalog.propTypes = {
-    data: PropTypes.shape({
-        id: PropTypes.number.isRequired,
-        nameKor: PropTypes.string.isRequired,
-        nameEng: PropTypes.string.isRequired,
-        cityKor: PropTypes.string.isRequired,
-        cityEng: PropTypes.string.isRequired,
-        tileset: PropTypes.string.isRequired,
-        url: PropTypes.string.isRequired,
-    })
-};
 
 export default Tileset3DCatalog;
