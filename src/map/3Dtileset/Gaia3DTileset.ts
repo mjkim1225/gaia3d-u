@@ -8,6 +8,8 @@ export default class Gaia3DTileset {
     private color: { conditions: string[][] };
     private show: { conditions: string[][] };
 
+    private transparency: number = 1;
+
     constructor(viewer: Cesium.Viewer | null, url: string) {
         this.viewer = viewer;
         this.color = {
@@ -61,6 +63,8 @@ export default class Gaia3DTileset {
             this.color = {
                 conditions
             }
+            this.transparency = transparency;
+
             this.tilesetObj.style = this.getStyle();
         }
     }
@@ -71,16 +75,16 @@ export default class Gaia3DTileset {
             if(field === 'USECON_DE' || field == 'BLDH_HGT'){
                 conditions = [];
                 buildingColor[field].legend.forEach(e => {
-                    conditions.push([""+ e.min +" <= ${"+ field +"} && ${"+ field +"} < " + e.max + "", "color('" + e.color + "')"])
+                    conditions.push([""+ e.min +" <= ${"+ field +"} && ${"+ field +"} < " + e.max + "", "color('" + e.color + `', ${this.transparency})`])
                 })
 
             }else if(field === 'BPRP_SE' || field == 'BULD_SE'){
                 conditions = [];
                 buildingColor[field].legend.forEach(e => {
-                    conditions.push(["${"+ field +"} === '" + e.code + "'", "color('" + e.color + "')"])
+                    conditions.push(["${"+ field +"} === '" + e.code + "'", "color('" + e.color + `', ${this.transparency})`])
                 })
             }else {
-                conditions = [["true", "color('"+ buildingColor.DEFAULT.legend[0].color +"')"]];
+                conditions = [["true", "color('"+ buildingColor.DEFAULT.legend[0].color + `', ${this.transparency})`]];
             }
 
             this.color = {
