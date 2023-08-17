@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import Slider from "@mui/material/Slider";
 import ConditionTemplate from '../common/ConditionTemplate';
 
@@ -9,12 +9,15 @@ const Transparency = ({ tileset }) => {
         setOpen(!open);
     };
 
-    const [transparency, setTransparency] = useState(1);
+    const [transparency, setTransparency] = useState(0.8);
 
     const changeTransparency = (value) => {
         setTransparency(value)
-        tileset.setTransparency(value);
     };
+
+    useEffect(() => {
+        tileset.setTransparency(transparency);
+    }, [transparency]);
 
     return (
         <ConditionTemplate title="투명도" open={open} toggleContent={toggleContent}>

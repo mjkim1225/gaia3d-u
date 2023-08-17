@@ -54,6 +54,7 @@ export default class Gaia3DTileset {
     }
 
     setTransparency (transparency: number) {
+        this.transparency = transparency;
         if(this.tilesetObj) {
             const conditions = this.color.conditions;
             for (let i = 0; i < conditions.length; i++) {
@@ -63,7 +64,6 @@ export default class Gaia3DTileset {
             this.color = {
                 conditions
             }
-            this.transparency = transparency;
 
             this.tilesetObj.style = this.getStyle();
         }
