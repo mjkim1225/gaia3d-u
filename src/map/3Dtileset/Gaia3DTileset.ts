@@ -1,5 +1,6 @@
 import * as Cesium from 'cesium';
 import config from "../config";
+import buildingColor from "../../data/buildingFeatureColor";
 
 export default class Gaia3DTileset {
     private readonly viewer: Cesium.Viewer | null;
@@ -10,7 +11,7 @@ export default class Gaia3DTileset {
     constructor(viewer: Cesium.Viewer | null, url: string) {
         this.viewer = viewer;
         this.color = {
-            conditions: [['true', "color('#D3D3D3')"]],
+            conditions: [],
         };
         this.show = {
             conditions: [],
@@ -24,8 +25,11 @@ export default class Gaia3DTileset {
             })
 
             tileset.style = this.getStyle();
+
             this.viewer?.scene.primitives.add(tileset);
             this.tilesetObj = tileset;
+            this.setColorByField('DEFAULT');
+
         })
     }
 
@@ -54,6 +58,31 @@ export default class Gaia3DTileset {
                 conditions[i][1] = conditions[i][1].replace(/color\('([#A-Fa-f0-9]+)'\)/, "color('$1', " + transparency + ")");
                 conditions[i][1] = conditions[i][1].replace(/color\('([#A-Fa-f0-9]+)',\s*(\d+(\.\d+)?)\)/, "color('$1', " + transparency + ")");
             }
+            this.color = {
+                conditions
+            }
+            this.tilesetObj.style = this.getStyle();
+        }
+    }
+
+    setColorByField(field: string) {
+        if(this.tilesetObj) {
+            let conditions = this.color.conditions;
+            if(field === 'USECON_DE' || field == 'BLDH_HGT'){
+                conditions = [];
+                buildingColor[field].legend.forEach(e => {
+                    conditions.push([""+ e.min +" <= ${"+ field +"} && ${"+ field +"} < " + e.max + "", "color('" + e.color + "')"])
+                })
+
+            }else if(field === 'BPRP_SE' || field == 'BULD_SE'){
+                conditions = [];
+                buildingColor[field].legend.forEach(e => {
+                    conditions.push(["${"+ field +"} === '" + e.code + "'", "color('" + e.color + "')"])
+                })
+            }else {
+                conditions = [["true", "color('"+ buildingColor.DEFAULT.legend[0].color +"')"]];
+            }
+
             this.color = {
                 conditions
             }
