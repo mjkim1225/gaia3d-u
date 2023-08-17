@@ -13,7 +13,7 @@ const Clipping = ({ tileset }) => {
     };
 
     useEffect(() => {
-        if (clipping) console.log("준비중~");
+        if (clipping) tileset.createClippingPlanes();
     }, [clipping]);
 
     return (

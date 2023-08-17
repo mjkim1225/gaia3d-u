@@ -4,7 +4,7 @@ import ListItemText from "@mui/material/ListItemText";
 import List from "@mui/material/List";
 import { styled } from "@mui/material/styles";
 import PropTypes from "prop-types";
-import ConditionTemplate from '../common/ConditionTemplate';
+import ConditionTemplate from './ConditionTemplate';
 
 const LegendColor = styled('div')(({ color }) => ({
     backgroundColor: color,

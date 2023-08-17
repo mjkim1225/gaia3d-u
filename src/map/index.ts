@@ -65,7 +65,8 @@ export default {
 
         try {
             viewer.terrainProvider = await Cesium.CesiumTerrainProvider.fromUrl(
-                'http://192.168.10.3:8002/dem05_MSL', {
+                // @ts-ignore
+                `${ASSET_SERVER}/dem05_MSL`, {
                     requestVertexNormals: true
                 });
         } catch (error) {

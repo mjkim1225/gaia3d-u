@@ -39,7 +39,7 @@ const Tileset3DCatalog = ({ data, removeCatalogId, tileset }) => {
 
     useEffect(() => {
 
-        zoom();
+        // zoom();
 
     }, []);
 

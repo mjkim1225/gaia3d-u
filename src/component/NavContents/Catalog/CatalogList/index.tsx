@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Tileset3DCatalog from "../Tileset3D";
+import Line from "../Line";
 
 const CatalogList = ({gaiaObjList, removeData}) => {
 
@@ -18,7 +19,7 @@ const CatalogList = ({gaiaObjList, removeData}) => {
                         return catalog.type === '3DTileset' ? (
                             <Tileset3DCatalog key={id} data={catalog} tileset={gaiaObj.gaiaObj} removeCatalogId={()=>remove(id)}/>
                         ) : catalog.type === 'line' ? (
-                            <div>test</div>
+                            <Line key={id} data={catalog} line={gaiaObj.gaiaObj} removeCatalogId={()=>remove(id)}/>
                         ) : null
                     }
                 })

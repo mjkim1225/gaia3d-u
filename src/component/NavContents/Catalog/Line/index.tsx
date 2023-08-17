@@ -15,7 +15,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 import map from "../../../../map";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import Legend from "./Legend";
+import Legend from "../common/Legend";
 import {styled} from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 
@@ -28,26 +28,15 @@ const Item = styled(Paper)(({theme}) => ({
     maxWidth: 400,
 }));
 
-const LineCatalog = ({ data, removeCatalogId }) => {
+const LineCatalog = ({ data, line, removeCatalogId }) => {
 
     const [subMenu, setSubMenu] = useState(false);
 
     const [show, setShow] = useState(true);
 
-    // @ts-ignore
-    const [line, setLine] = useState<map.GaiaGeoJsonDataSource | null>(null);
-
-    // 실제 데이터를 remove 하지않고, 컴포넌트만 지운다
-    // 이유: 데이터를 실제로 list에서 remove 하면 컴포넌트를 다시생성하는데, 그때 Gaia** 객체들도 다시 생성된다.. 따라서 기능이 제대로 수행이 안됨
-    const [isVisible, setIsVisible] = useState(true);
-
     const [legendList, setLegendList] = useState<{id:number, title:string, color:string}[]>([]);
 
     useEffect(() => {
-        const viewer = map.getViewer();
-        const _line = new map.GaiaGeoJsonDataSource(viewer, data.dataList);
-        setLine(_line);
-
         data.dataList.map((item, index) => {
             setLegendList(prevState => [...prevState, {id:index, title:item.nameKor, color:item.color}]);
         });
@@ -66,13 +55,9 @@ const LineCatalog = ({ data, removeCatalogId }) => {
 
     const remove = () => {
         line.remove();
-        setIsVisible(false);
         removeCatalogId();
     }
 
-    if (!isVisible) {
-        return null; // isVisible이 false일 때는 컴포넌트를 렌더링하지 않음
-    }
     return (
         <>
             <Box sx={{ flexGrow: 1, overflow: 'hidden', px: 1 }}>

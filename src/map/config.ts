@@ -24,7 +24,7 @@ const SHADOW_MODE = {
 }
 
 const CLIPPING_OPTIONS = {
-    BOX_SIZE: 50,
+    BOX_SIZE: 700,
     DIRECTIONS: {
         TOP: 0,
         BOTTOM: 1,
@@ -34,7 +34,7 @@ const CLIPPING_OPTIONS = {
         BACK: 5,
     },
     naming: (tilesetIndex, direction) => `${tilesetIndex}-${direction}`,
-    parsingDirection: (name) => name.split('-')[1],
+    parsingDirection: (name) => Number(name.split('-')[1]),
 }
 
 export default {
